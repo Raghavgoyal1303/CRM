@@ -2,16 +2,24 @@ const db = require('../config/db');
 const { v4: uuidv4 } = require('uuid');
 
 exports.getFollowUps = async (req, res) => {
-  const { company_id } = req.user;
+  const { company_id, role, id: user_id } = req.user;
   try {
-    const { rows } = await db.query(
-      `SELECT f.*, l.name as lead_name, l.phone_number 
-       FROM follow_ups f 
-       JOIN leads l ON f.lead_id = l.id 
-       WHERE f.company_id = ? 
-       ORDER BY f.next_followup_date ASC`,
-      [company_id]
-    );
+    let sql = `
+      SELECT f.*, l.name as lead_name, l.phone_number 
+      FROM follow_ups f 
+      JOIN leads l ON f.lead_id = l.id 
+      WHERE f.company_id = ?
+    `;
+    const params = [company_id];
+
+    if (role === 'employee') {
+      sql += ' AND l.assigned_to = ?';
+      params.push(user_id);
+    }
+
+    sql += ' ORDER BY f.next_followup_date ASC';
+
+    const { rows } = await db.query(sql, params);
     res.json(rows || []);
   } catch (err) {
     console.error('[FollowUps] Query failed:', err.message);

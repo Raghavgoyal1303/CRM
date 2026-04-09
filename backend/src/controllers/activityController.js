@@ -5,12 +5,19 @@ const { v4: uuidv4 } = require('uuid');
  * Access company-wide activity history
  */
 exports.getActivityLogs = async (req, res) => {
-  const { company_id } = req.user;
+  const { company_id, role, id: user_id } = req.user;
   try {
-    const { rows } = await db.query(
-      'SELECT a.*, u.name as user_name FROM activity_logs a LEFT JOIN employees u ON a.user_id = u.id WHERE a.company_id = ? ORDER BY a.created_at DESC LIMIT 50',
-      [company_id]
-    );
+    let sql = 'SELECT a.*, u.name as user_name FROM activity_logs a LEFT JOIN employees u ON a.user_id = u.id WHERE a.company_id = ?';
+    const params = [company_id];
+
+    if (role === 'employee') {
+      sql += ' AND a.user_id = ?';
+      params.push(user_id);
+    }
+
+    sql += ' ORDER BY a.created_at DESC LIMIT 50';
+
+    const { rows } = await db.query(sql, params);
     res.json(rows);
   } catch (err) {
     res.status(500).json({ message: 'Internal Server Error' });

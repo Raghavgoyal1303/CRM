@@ -17,8 +17,8 @@ import { useAuth } from '../context/AuthContext';
 import { theme } from '../theme';
 import AppHeader from '../components/layout/AppHeader';
 import { Clock, Camera as CameraIcon, CheckCircle, XCircle, RefreshCcw } from 'lucide-react-native';
-import axios from 'axios';
-import { API_BASE_URL } from '../api';
+import api from '../api';
+import { API_BASE_URL } from '../api/config';
 
 const { width, height } = Dimensions.get('window');
 
@@ -40,25 +40,30 @@ const AttendanceScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
+    let interval;
     if (status?.clock_in && !status?.clock_out) {
-      const timer = setInterval(() => {
-        const start = new Date(status.clock_in);
-        const now = new Date();
-        const diff = now - start;
+      interval = setInterval(() => {
+        const start = new Date(status.clock_in).getTime();
+        const now = new Date().getTime();
+        const diff = Math.max(0, now - start); // Safety: Prevent negative time
+        
         const h = Math.floor(diff / 3600000).toString().padStart(2, '0');
         const m = Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0');
         const s = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
         setElapsedTime(`${h}:${m}:${s}`);
       }, 1000);
-      return () => clearInterval(timer);
     } else {
       setElapsedTime('00:00:00');
     }
+    return () => clearInterval(interval);
   }, [status]);
 
   const fetchStatus = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/attendance/status?userId=${user.id}`);
+      const response = await api.get(`/attendance/status?userId=${user.id}`);
+      if (response.data?.clock_in) {
+        console.log('[Attendance] Active session found. Clock-in (UTC):', response.data.clock_in);
+      }
       setStatus(response.data);
     } catch (error) {
       console.error('[Attendance] Status error:', error);
@@ -111,14 +116,16 @@ const AttendanceScreen = ({ navigation }) => {
     });
 
     try {
-      await axios.post(`${API_BASE_URL}/attendance/clock-in`, formData, {
+      const response = await api.post(`/attendance/clock-in`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
+      console.log('[Attendance] Clock-in response:', response.data);
       Alert.alert('Success', 'Clock-in recorded!');
       fetchStatus();
     } catch (error) {
-      console.error('Clock-in error:', error);
-      Alert.alert('Error', 'Clock-in failed. Please try again.');
+      console.error('Clock-in error:', error.response?.data || error.message);
+      const msg = error.response?.data?.message || error.message;
+      Alert.alert('Error', `Clock-in failed: ${msg}`);
     } finally {
       setUploading(false);
       setPhoto(null);
@@ -128,12 +135,14 @@ const AttendanceScreen = ({ navigation }) => {
   const clockOut = async () => {
     setUploading(true);
     try {
-      await axios.post(`${API_BASE_URL}/attendance/clock-out`, { userId: user.id });
+      const response = await api.post(`/attendance/clock-out`, { userId: user.id });
+      console.log('[Attendance] Clock-out response:', response.data);
       Alert.alert('Success', 'Clock-out recorded! See you tomorrow.');
       fetchStatus();
     } catch (error) {
-      console.error('Clock-out error:', error);
-      Alert.alert('Error', 'Clock-out failed');
+      console.error('Clock-out error:', error.response?.data || error.message);
+      const msg = error.response?.data?.message || error.message;
+      Alert.alert('Error', `Clock-out failed: ${msg}`);
     } finally {
       setUploading(false);
     }

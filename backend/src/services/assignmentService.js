@@ -7,13 +7,20 @@ const db = require('../config/db');
  */
 const assignRoundRobin = async (companyId) => {
   try {
-    // 1. Get all active employees for this company (role = employee or admin)
-    const { rows: employees } = await db.query(
-      'SELECT id FROM employees WHERE company_id = ? AND is_active = 1 AND role != "superadmin" ORDER BY created_at ASC',
-      [companyId]
-    );
+    // 1. Get ONLY Online Employees (Photography Attendance Rule)
+    // Rule: Green only if clocked-in TODAY + No clock-out + Photo exists
+    const { rows: employees } = await db.query(`
+      SELECT e.id FROM employees e
+      INNER JOIN attendance a ON e.id = a.user_id AND a.date = CURDATE()
+      WHERE e.company_id = ? AND e.is_active = 1 AND a.clock_out IS NULL AND a.photo_url IS NOT NULL
+      ORDER BY e.created_at ASC
+    `, [companyId]);
 
-    if (employees.length === 0) return null;
+    if (employees.length === 0) {
+      console.log(`[Round Robin] No agents online for company ${companyId}`);
+      return null;
+    }
+
 
     // 2. Get the current pointer for this company
     const { rows: pointers } = await db.query(

@@ -1,22 +1,22 @@
-# LeadFlow CRM — External Lead Ingestion Protocol
+# Tricity Verified CRM — External Lead Ingestion Protocol
 
-This document provides the technical specification for third-party systems (IVR, Lead Aggregators, Call Centers) to push lead data into the LeadFlow CRM.
+This document provides the technical specification for third-party systems (IVR, Lead Aggregators, Call Centers) to push lead data into the Tricity Verified CRM.
 
 ---
 
 ## 🛠️ AUTHENTICATION
 
-All requests must include your unique **API Key** in the request headers. You can generate this key in the **LeadFlow Dashboard** under the **Developer Settings** tab.
+All requests must include your unique **API Key** in the request headers. You can generate this key in the **Tricity Verified Dashboard** under the **Developer API** tab.
 
 **Required Header:**
-`X-API-Key: YOUR_LF_LIVE_KEY_HERE`
+`X-API-Key: YOUR_TV_LIVE_KEY_HERE`
 
 ---
 
 ## 🛰️ ENDPOINT
 
 **Target URL:**
-`POST http://192.168.1.104:5000/api/webhook/ivr`
+`POST https://api.tricityverified.com/api/webhook/ivr`
 
 ---
 
@@ -51,10 +51,10 @@ Submit lead details in a standard JSON body.
 | `401 Unauthorized` | Invalid Key | Check your `X-API-Key` header |
 | `403 Forbidden` | Denied | Ensure key has `leads:create` permissions |
 | `400 Bad Request` | Missing Data | Ensure `phone` is provided |
-| `500 Server Error` | Backend Failure | Contact LeadFlow Admin |
+| `500 Server Error` | Backend Failure | Contact Tricity Verified Admin |
 
 ---
 
 ## 🏗️ LOGGING & AUDIT
 
-Every request made with your API Key is logged in the **API Request Logs** in your LeadFlow Dashboard for security and volume audits.
+Every request made with your API Key is logged in the **API Request Logs** in your Tricity Verified Dashboard for security and volume audits.

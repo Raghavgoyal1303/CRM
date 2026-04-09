@@ -17,7 +17,7 @@ import {
   Trash2,
   ExternalLink
 } from 'lucide-react';
-import { leadApi, followUpApi } from '../api';
+import { leadApi, followUpApi, telephonyApi } from '../api';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const LeadDetail = () => {
@@ -48,6 +48,17 @@ const LeadDetail = () => {
       console.error('Failed to intercept lead intelligence');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCall = async () => {
+    try {
+      const res = await telephonyApi.acefoneCall(id);
+      alert(res.data.message);
+    } catch (err) {
+      console.error('Telephony Bridge Failure:', err);
+      // Fallback to standard tel link if dialing fails
+      window.location.href = `tel:${lead.phone_number}`;
     }
   };
 
@@ -135,9 +146,12 @@ const LeadDetail = () => {
                </div>
             </div>
             <div className="flex items-center gap-3">
-               <a href={`tel:${lead.phone_number}`} className="flex-1 lg:flex-none px-6 h-14 bg-indigo-600 text-white rounded-2xl flex items-center justify-center gap-3 font-black text-[11px] uppercase tracking-widest shadow-xl shadow-indigo-100 hover:-translate-y-1 transition-all">
-                  <Phone size={18} fill="white" /> Call Now
-               </a>
+               <button 
+                onClick={handleCall}
+                className="flex-1 lg:flex-none px-6 h-14 bg-indigo-600 text-white rounded-2xl flex items-center justify-center gap-3 font-black text-[11px] uppercase tracking-widest shadow-xl shadow-indigo-100 hover:-translate-y-1 transition-all"
+               >
+                  <Phone size={18} fill="white" /> Call with Acefone
+               </button>
                <a href={`https://wa.me/${lead.phone_number?.replace(/\D/g, '')}`} className="flex-1 lg:flex-none px-6 h-14 bg-emerald-600 text-white rounded-2xl flex items-center justify-center gap-3 font-black text-[11px] uppercase tracking-widest shadow-xl shadow-emerald-100 hover:-translate-y-1 transition-all">
                   <MessageCircle size={18} /> WhatsApp
                </a>

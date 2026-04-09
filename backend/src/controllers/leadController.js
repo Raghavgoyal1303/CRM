@@ -2,12 +2,19 @@ const { query, transaction } = require('../config/db');
 const { v4: uuidv4 } = require('uuid');
 
 exports.getLeads = async (req, res) => {
-  const { company_id } = req.user;
+  const { company_id, role, id: user_id } = req.user;
   try {
-    const { rows } = await query(
-      'SELECT id, name, phone_number, status, source, created_at FROM leads WHERE company_id = ? AND deleted_at IS NULL ORDER BY created_at DESC',
-      [company_id]
-    );
+    let sql = 'SELECT id, name, phone_number, status, source, created_at FROM leads WHERE company_id = ? AND deleted_at IS NULL';
+    const params = [company_id];
+
+    if (role === 'employee') {
+      sql += ' AND assigned_to = ?';
+      params.push(user_id);
+    }
+
+    sql += ' ORDER BY created_at DESC';
+
+    const { rows } = await query(sql, params);
     res.json(rows || []);
   } catch (err) {
     console.error('[Leads] Fetch failed:', err.message);

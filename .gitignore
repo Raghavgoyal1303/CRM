@@ -54,3 +54,17 @@ desktop.ini
 # Project Config
 .env.*
 !.env.example
+
+# Temporary / Artifacts
+.gemini/
+backend/scratch/
+backend/public/
+backend/add_test_employees.js
+backend/assign_test_leads.js
+backend/migrate_acefone.js
+backend/node_modules/.package-lock.json
+dist/
+dist-ssr/
+*.local
+node_modules/
+package-lock.json

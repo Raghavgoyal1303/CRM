@@ -69,7 +69,7 @@ const DashboardScreen = ({ navigation }) => {
       <AppHeader 
         title="Home Screen" 
         navigation={navigation} 
-        rightActions={['notif', 'avatar', 'menu']}
+        rightActions={['notif', 'avatar']}
       />
       
       <ScrollView 
@@ -146,7 +146,15 @@ const styles = StyleSheet.create({
   welcomeText: { fontSize: 24, fontWeight: '800', color: theme.colors.text, fontFamily: theme.fonts.heading, marginTop: 4 },
   
   orbRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 32 },
-  orbCard: { width: '31%', backgroundColor: '#fff', borderRadius: 16, padding: 16, alignItems: 'center', ...theme.shadows.card },
+  orbCard: { 
+    width: '31%', 
+    backgroundColor: '#fff', 
+    borderRadius: 16, 
+    padding: 16, 
+    alignItems: 'center', 
+    ...theme.shadows.card,
+    borderWidth: 0,
+  },
   orbIconBox: { width: 36, height: 36, borderRadius: 12, justifyContent: 'center', alignItems: 'center', marginBottom: 12 },
   orbValue: { fontSize: 22, fontWeight: '800', color: theme.colors.text, fontFamily: theme.fonts.heading },
   orbTitle: { fontSize: 11, color: theme.colors.textSecondary, fontWeight: '600' },

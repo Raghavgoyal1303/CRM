@@ -12,17 +12,17 @@ export const theme = {
     background: '#F9F7F4',     // Page Background
     surface: '#FFFFFF',        // Card Background
     border: '#F0EEF8',         // Border Color
-    
+
     text: '#1A1A2E',           // Text Primary
     textSecondary: '#6B7280',  // Text Secondary
     textMuted: '#9CA3AF',      // Text Muted
-    
+
     success: '#10B981',        // Success
     warning: '#F59E0B',        // Warning
     danger: '#EF4444',         // Danger
-    
+
     accentLight: '#EEF2FF',    // Light Indigo Tint
-    
+
     status: {
       new: { bg: '#EFF6FF', text: '#1D4ED8' },
       contacted: { bg: '#F5F3FF', text: '#6D28D9' },
@@ -32,14 +32,14 @@ export const theme = {
       lost: { bg: '#FFF1F2', text: '#BE123C' },
     }
   },
-  
+
   shadows: {
     card: {
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 3, // Android reference spec
+      shadowColor: '#1A1A2E',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.08,
+      shadowRadius: 10,
+      elevation: 4,
     },
     premium: {
       shadowColor: '#4F46E5',
@@ -49,7 +49,7 @@ export const theme = {
       elevation: 10,
     }
   },
-  
+
   borderRadius: {
     sm: 8,
     md: 12,       // Button radius
@@ -57,7 +57,7 @@ export const theme = {
     xl: 24,       // Header bottom radius
     full: 9999,   // Badge radius (pill)
   },
-  
+
   fonts: {
     heading: 'Sora',
     body: 'Inter',

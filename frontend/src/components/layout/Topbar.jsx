@@ -6,7 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 const Topbar = () => {
   const { user } = useAuth();
   const location = useLocation();
-  
+
   // Simple breadcrumb logic
   const pathParts = location.pathname.split('/').filter(p => p);
   const pageTitle = pathParts[pathParts.length - 1] || 'Dashboard';
@@ -44,7 +44,7 @@ const Topbar = () => {
             <Bell size={20} />
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
           </button>
-          
+
           <div className="w-9 h-9 rounded-full bg-status-site-visit-bg flex items-center justify-center text-primary ring-2 ring-primary/10 cursor-pointer shadow-sm">
             <User size={18} />
           </div>

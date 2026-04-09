@@ -5,10 +5,16 @@ const { v4: uuidv4 } = require('uuid');
 const developerController = {
   listKeys: async (req, res) => {
     try {
-      const result = await query(
-        'SELECT id, name, description, key_preview, permissions, environment, is_active, rate_limit, calls_this_month, last_used_at, created_at FROM api_keys WHERE company_id = ? ORDER BY created_at DESC',
-        [req.user.company_id]
-      );
+      let sql = 'SELECT id, name, description, key_preview, permissions, environment, is_active, rate_limit, calls_this_month, last_used_at, created_at FROM api_keys';
+      let params = [];
+
+      if (req.user.role !== 'superadmin') {
+        sql += ' WHERE company_id = ?';
+        params.push(req.user.company_id);
+      }
+      
+      sql += ' ORDER BY created_at DESC';
+      const result = await query(sql, params);
       res.json(result.rows);
     } catch (err) {
       res.status(500).json({ error: err.message });
@@ -49,10 +55,15 @@ const developerController = {
   revokeKey: async (req, res) => {
     try {
       const { id } = req.params;
-      await query(
-        'UPDATE api_keys SET is_active = 0, revoked_at = NOW(), revoked_by = ? WHERE id = ? AND company_id = ?',
-        [req.user.id, id, req.user.company_id]
-      );
+      let sql = 'UPDATE api_keys SET is_active = 0, revoked_at = NOW(), revoked_by = ? WHERE id = ?';
+      let params = [req.user.id, id];
+
+      if (req.user.role !== 'superadmin') {
+        sql += ' AND company_id = ?';
+        params.push(req.user.company_id);
+      }
+
+      await query(sql, params);
       res.json({ message: 'API Key revoked' });
     } catch (err) {
       res.status(500).json({ error: err.message });
@@ -88,7 +99,7 @@ const developerController = {
   ping: async (req, res) => {
     res.json({
       status: 'active',
-      bridge: 'LeadFlow Developer Protocol',
+      bridge: 'Tricity Verified Developer Protocol',
       timestamp: new Date().toISOString(),
       message: 'Strategic developer connectivity verified.'
     });

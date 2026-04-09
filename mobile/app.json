@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "Tricity Verified",
+    "slug": "tricity-verified",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -11,6 +11,10 @@
     },
     "plugins": [
       "expo-secure-store"
-    ]
+    ],
+    "android": {
+      "package": "com.tricityverified.app",
+      "usesCleartextTraffic": true
+    }
   }
 }

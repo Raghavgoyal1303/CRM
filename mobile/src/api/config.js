@@ -1,25 +1,27 @@
 import Constants from 'expo-constants';
 
 /**
- * LeadFlow Mobile API Configuration
+ * Tricity Verified Mobile API Configuration
  * 
  * Update: Hardcoded verified LAN IP 192.168.1.104 for industrial connectivity.
  */
 
 const getBaseUrl = () => {
-  // 1. Prioritize verified LAN IP (Hardcoded for stability)
-  const LAN_IP = '192.168.1.104';
-  
-  // 2. Check if hostUri is available (Expo Go detection)
+  // 1. Dynamic Local IP Detection (Expo Go / Development)
   const debuggerHost = Constants.expoConfig?.hostUri;
-  
-  if (debuggerHost) {
-    const ip = debuggerHost.split(':')[0];
-    // console.log('[Mobile API] Detected Expo Host:', ip);
+  const devIp = debuggerHost ? debuggerHost.split(':')[0] : 'localhost';
+
+  // 2. Production URL (Fallback)
+  // Replace with your real production domain when ready (e.g., https://api.tricityverified.com/api)
+  const PROD_URL = 'https://api.tricityverified.com/api';
+
+  // 3. Logic: If we have a dev host, use it. Otherwise, assume production.
+  // Note: For physical devices in dev, the hostUri is essential.
+  if (__DEV__) {
+    return `http://${devIp}:5000/api`;
   }
 
-  // Use the verified IP to resolve 'Network Error' on physical devices
-  return `http://${LAN_IP}:5000/api`;
+  return PROD_URL;
 };
 
 export const API_BASE_URL = getBaseUrl();

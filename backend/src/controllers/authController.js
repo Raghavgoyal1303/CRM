@@ -19,22 +19,26 @@ exports.login = async (req, res) => {
     }
 
     const user = rows[0];
+    console.log('[Auth] Attempting login for:', email);
+    console.log('[Auth] Found user role:', user.role);
 
     if (!user.is_active) {
-       return res.status(403).json({ message: 'Account suspended. Contact your admin.' });
+      return res.status(403).json({ message: 'Account suspended. Contact your admin.' });
     }
 
     // 2. Verify password with bcrypt
     const isMatch = await bcrypt.compare(password, user.password_hash);
+    console.log('[Auth] Password Match Result:', isMatch);
+    
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     // 3. Fetch company name for the UI context
-    let company_name = 'LeadFlow SAAS';
+    let company_name = 'Tricity Verified Platform';
     if (user.role !== 'super_admin' && user.company_id) {
-       const { rows: compRows } = await db.query('SELECT name FROM companies WHERE id = ?', [user.company_id]);
-       if (compRows.length > 0) company_name = compRows[0].name;
+      const { rows: compRows } = await db.query('SELECT name FROM companies WHERE id = ?', [user.company_id]);
+      if (compRows.length > 0) company_name = compRows[0].name;
     }
 
     // 4. Generate JWT
@@ -53,7 +57,7 @@ exports.login = async (req, res) => {
     });
 
     console.log('[Backend] Sending Login Response for user:', email, 'Token exists:', !!token);
-    
+
     res.json({
       user: { id: user.id, name: user.name, role: user.role, company_id: user.company_id, company_name },
       token
@@ -77,10 +81,10 @@ exports.getMe = async (req, res) => {
     if (rows.length === 0) return res.status(404).json({ message: 'User not found' });
 
     const user = rows[0];
-    let company_name = 'LeadFlow SAAS';
+    let company_name = 'Tricity Verified Platform';
     if (user.role !== 'super_admin' && user.company_id) {
-       const { rows: compRows } = await db.query('SELECT name FROM companies WHERE id = ?', [user.company_id]);
-       if (compRows.length > 0) company_name = compRows[0].name;
+      const { rows: compRows } = await db.query('SELECT name FROM companies WHERE id = ?', [user.company_id]);
+      if (compRows.length > 0) company_name = compRows[0].name;
     }
 
     res.json({ id: user.id, name: user.name, role: user.role, company_id: user.company_id, company_name });

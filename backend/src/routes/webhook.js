@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const webhookController = require('../controllers/webhookController');
 const liveCallController = require('../controllers/liveCallController');
+const telephonyController = require('../controllers/telephonyController');
 const { apiKeyAuth, requirePermission } = require('../middleware/apiKeyAuth');
 
 /**
@@ -12,6 +13,9 @@ const { apiKeyAuth, requirePermission } = require('../middleware/apiKeyAuth');
  * Body: { phone: "...", name: "...", source: "ivr", notes: "..." }
  */
 router.post('/ivr', apiKeyAuth, requirePermission('leads', 'create'), webhookController.handleIvrLead);
+
+// Acefone Telephony Gateway
+router.post('/telephony/acefone/:companyId', telephonyController.handleAcefoneWebhook);
 
 // Legacy/Public Exotel endpoints (Company ID based)
 router.post('/exotel/live-start/:company_id', liveCallController.startCall);

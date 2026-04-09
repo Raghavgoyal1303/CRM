@@ -4,46 +4,77 @@ const db = require('../config/db');
  * Main company dashboard aggregation
  */
 exports.getDashboardStats = async (req, res) => {
-  const { company_id } = req.user;
+  const { company_id, role, id: user_id } = req.user;
   try {
     const fetchMetric = async (sql, params) => {
       try {
         const { rows } = await db.query(sql, params);
-        return rows[0]?.count || rows[0]?.value || 0;
+        return rows[0]?.count || 0;
       } catch (err) {
-        console.error('[Analytics] Metric failed:', sql, err.message);
+        console.error('[Analytics] Metric failed:', err.message);
         return 0;
       }
     };
 
-    // 2. Conversion Rate (WON = closed)
-    const totalLeads = await fetchMetric('SELECT COUNT(*) as count FROM leads WHERE company_id = ?', [company_id]);
-    const totalWon = await fetchMetric('SELECT COUNT(*) as count FROM leads WHERE company_id = ? AND status = "closed"', [company_id]);
-    const conversionRate = totalLeads > 0 ? ((totalWon / totalLeads) * 100).toFixed(1) : 0;
-    const totalCalls = await fetchMetric('SELECT COUNT(*) as count FROM call_logs WHERE company_id = ?', [company_id]);
-    const totalEmployees = await fetchMetric('SELECT COUNT(*) as count FROM employees WHERE company_id = ? AND role = "employee"', [company_id]);
-    
-    // Status breakdown requires more care
-    let statusBreakdown = [];
-    try {
-      const { rows } = await db.query(
-        'SELECT status, COUNT(*) as count FROM leads WHERE company_id = ? GROUP BY status',
-        [company_id]
-      );
-      statusBreakdown = rows;
-    } catch (e) {}
+    let leadFilter = 'WHERE company_id = ?';
+    const params = [company_id];
 
-    // Calculate stats for return
+    if (role === 'employee') {
+      leadFilter += ' AND assigned_to = ?';
+      params.push(user_id);
+    }
+
+    const totalLeads = await fetchMetric(`SELECT COUNT(*) as count FROM leads ${leadFilter}`, params);
+    const contactedLeads = await fetchMetric(`SELECT COUNT(*) as count FROM leads ${leadFilter} AND status = "contacted"`, params);
+    const interestedLeads = await fetchMetric(`SELECT COUNT(*) as count FROM leads ${leadFilter} AND status = "interested"`, params);
+    const closedLeads = await fetchMetric(`SELECT COUNT(*) as count FROM leads ${leadFilter} AND status = "closed"`, params);
+    
+    // Status breakdown
+    const { rows: statusRows } = await db.query(
+      `SELECT status, COUNT(*) as count FROM leads ${leadFilter} GROUP BY status`,
+      params
+    );
+
+    const statusCounts = statusRows.reduce((acc, curr) => {
+      acc[curr.status] = curr.count;
+      return acc;
+    }, {});
 
     res.json({
-      total_leads: totalLeads,
-      today_calls: totalCalls,
-      conversion_rate: conversionRate,
-      status_breakdown: statusBreakdown,
-      total_employees: totalEmployees
+      totalLeads,
+      contactedLeads,
+      interestedLeads,
+      closedLeads,
+      statusCounts
     });
   } catch (err) {
     console.error('[Analytics] Dashboard aggregation failed:', err);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+/**
+ * Get performance metrics for all employees (for Admin table)
+ */
+exports.getEmployeePerformance = async (req, res) => {
+  const { company_id } = req.user;
+  try {
+    const { rows } = await db.query(`
+      SELECT 
+        e.id as employee_id,
+        e.name as employee_name,
+        COUNT(l.id) as total_leads,
+        SUM(CASE WHEN l.status = 'closed' THEN 1 ELSE 0 END) as closed_leads,
+        ROUND((SUM(CASE WHEN l.status = 'closed' THEN 1 ELSE 0 END) / NULLIF(COUNT(l.id), 0)) * 100, 1) as conversion_rate
+      FROM employees e
+      LEFT JOIN leads l ON e.id = l.assigned_to
+      WHERE e.company_id = ? AND e.role = 'employee' AND e.deleted_at IS NULL
+      GROUP BY e.id, e.name
+    `, [company_id]);
+    
+    res.json(rows);
+  } catch (err) {
+    console.error('[Analytics] Employee performance failed:', err);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };

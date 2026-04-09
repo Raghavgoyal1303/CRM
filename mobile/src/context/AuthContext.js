@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { authApi } from '../api';
+import { API_BASE_URL } from '../api/config';
 
 const AuthContext = createContext();
 
@@ -32,7 +33,6 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await authApi.login({ email, password });
-      console.log('[Auth] Login response:', response.data);
       
       const { user } = response.data;
       // Search for token in response.data or response.data.data
@@ -42,14 +42,22 @@ export const AuthProvider = ({ children }) => {
         const tokenString = typeof token === 'string' ? token : (token.token || token.value || String(token));
         await SecureStore.setItemAsync('userToken', tokenString);
         setUser(user || response.data.data?.user || response.data);
+        console.log('[Auth] Protocol accepted. Session established.');
         return { success: true };
       }
+      console.warn('[Auth] Server handshake missing access cipher');
       return { success: false, message: 'Invalid server response: token missing' };
     } catch (error) {
-      console.error('[Auth] Login error:', error.response?.data?.message || error.message);
+      const errorMsg = error.response?.data?.message || error.message;
+      console.error('[Auth] Login sequence failed:', {
+        type: error.response ? 'Server Error' : 'Connection/Network Fault',
+        status: error.response?.status,
+        reason: errorMsg,
+        endpoint: API_BASE_URL
+      });
       return { 
         success: false, 
-        message: error.response?.data?.message || 'Invalid credentials' 
+        message: error.response ? errorMsg : 'Network Error: Cannot reach server. Ensure both devices are on same Wi-Fi.' 
       };
     }
   };

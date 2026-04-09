@@ -267,68 +267,129 @@ const SettingsPage = () => {
             <div className="space-y-10">
                <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-xl font-heading font-black text-indigo-900 mb-2">Telephony Encryption (Exotel)</h3>
-                    <p className="text-sm text-gray-400 font-medium">Configure encrypted voice intercept gateway for incoming leads.</p>
+                    <h3 className="text-xl font-heading font-black text-indigo-900 mb-2">Telephony Gateway Bridge</h3>
+                    <p className="text-sm text-gray-400 font-medium">Configure encrypted voice intercept gateways for incoming/outgoing leads.</p>
                   </div>
-                  <div className="px-4 py-2 bg-emerald-50 text-emerald-600 rounded-xl text-[10px] font-black border border-emerald-100 tracking-widest">
-                     CHANNEL SECURE
+                  <div className="flex items-center gap-2">
+                    <button 
+                      type="button"
+                      onClick={() => setCompanySettings({...companySettings, telephony_provider: 'exotel'})}
+                      className={`px-4 py-2 rounded-xl text-[10px] font-black border tracking-widest transition-all ${companySettings.telephony_provider === 'exotel' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-400 border-gray-200'}`}
+                    >
+                      EXOTEL
+                    </button>
+                    <button 
+                      type="button"
+                      onClick={() => setCompanySettings({...companySettings, telephony_provider: 'acefone'})}
+                      className={`px-4 py-2 rounded-xl text-[10px] font-black border tracking-widest transition-all ${companySettings.telephony_provider === 'acefone' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-400 border-gray-200'}`}
+                    >
+                      ACEFONE (IN)
+                    </button>
                   </div>
                </div>
 
-               <div className="space-y-6">
-                  <div className="grid grid-cols-2 gap-8">
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Exotel API Key</label>
-                      <input 
-                        type="password" 
-                        placeholder="sk_test_..."
-                        className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-[20px] px-5 py-4 text-xs font-mono font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                        value={companySettings.exotel_key}
-                        onChange={e => setCompanySettings({...companySettings, exotel_key: e.target.value})}
-                      />
+               {companySettings.telephony_provider === 'acefone' ? (
+                 <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                    <div className="grid grid-cols-2 gap-8">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Acefone API Token</label>
+                        <input 
+                          type="password" 
+                          placeholder="eyJhbGci..."
+                          className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-[20px] px-5 py-4 text-xs font-mono font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                          value={companySettings.acefone_api_key}
+                          onChange={e => setCompanySettings({...companySettings, acefone_api_key: e.target.value})}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Company Access ID (Optional)</label>
+                        <input 
+                          type="password" 
+                          placeholder="Optional"
+                          className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-[20px] px-5 py-4 text-xs font-mono font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                          value={companySettings.acefone_api_token}
+                          onChange={e => setCompanySettings({...companySettings, acefone_api_token: e.target.value})}
+                        />
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Exotel Token</label>
-                      <input 
-                        type="password" 
-                        placeholder="tk_test_..."
-                        className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-[20px] px-5 py-4 text-xs font-mono font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                        value={companySettings.exotel_token}
-                        onChange={e => setCompanySettings({...companySettings, exotel_token: e.target.value})}
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Account SID</label>
-                    <input 
-                      type="text" 
-                      placeholder="AC..."
-                      className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-[20px] px-5 py-4 text-xs font-mono font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                      value={companySettings.exotel_sid}
-                      onChange={e => setCompanySettings({...companySettings, exotel_sid: e.target.value})}
-                    />
-                  </div>
 
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Webhook Transmission Gateway</label>
-                    <div className="flex gap-3">
-                       <input 
-                        readOnly 
-                        value={`${import.meta.env.VITE_API_BASE_URL || 'https://api.yourdomain.com'}/api/webhook/exotel/${user.company_id}`} 
-                        className="flex-1 bg-white border border-[#F0EEF8] rounded-xl px-4 py-3 text-xs font-mono text-gray-400 italic" 
-                       />
-                       <button className="p-3 bg-white border border-[#F0EEF8] rounded-xl text-gray-400 hover:text-indigo-600 transition-colors">
-                          <Copy size={18} />
-                       </button>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Acefone Webhook Transmission Endpoint</label>
+                      <div className="flex gap-3">
+                         <input 
+                          readOnly 
+                          value={`${import.meta.env.VITE_API_BASE_URL || window.location.origin}/api/webhook/telephony/acefone/${user.company_id}`} 
+                          className="flex-1 bg-white border border-[#F0EEF8] rounded-xl px-4 py-3 text-xs font-mono text-gray-400 italic" 
+                         />
+                         <button 
+                          type="button"
+                          onClick={() => navigator.clipboard.writeText(`${import.meta.env.VITE_API_BASE_URL || window.location.origin}/api/webhook/telephony/acefone/${user.company_id}`)}
+                          className="p-3 bg-white border border-[#F0EEF8] rounded-xl text-gray-400 hover:text-indigo-600 transition-colors"
+                         >
+                            <Copy size={18} />
+                         </button>
+                      </div>
+                      <p className="text-[10px] text-gray-400 font-bold px-2 mt-2 leading-relaxed">
+                         Configure this URL in your Acefone.in portal (Services &gt; Webhook) to automate lead capture and fair agent assignment.
+                      </p>
                     </div>
-                    <p className="text-[10px] text-gray-400 font-bold px-2 mt-2 leading-relaxed">
-                       Configure this URL in your Exotel Passthru dashboard to begin capturing incoming lead transmissions.
-                    </p>
-                  </div>
-               </div>
+                 </div>
+               ) : (
+                 <div className="space-y-6 animate-in fade-in slide-in-from-left-4 duration-300">
+                    <div className="grid grid-cols-2 gap-8">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Exotel API Key</label>
+                        <input 
+                          type="password" 
+                          placeholder="sk_test_..."
+                          className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-[20px] px-5 py-4 text-xs font-mono font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                          value={companySettings.exotel_key}
+                          onChange={e => setCompanySettings({...companySettings, exotel_key: e.target.value})}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Exotel Token</label>
+                        <input 
+                          type="password" 
+                          placeholder="tk_test_..."
+                          className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-[20px] px-5 py-4 text-xs font-mono font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                          value={companySettings.exotel_token}
+                          onChange={e => setCompanySettings({...companySettings, exotel_token: e.target.value})}
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Account SID</label>
+                      <input 
+                        type="text" 
+                        placeholder="AC..."
+                        className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-[20px] px-5 py-4 text-xs font-mono font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                        value={companySettings.exotel_sid}
+                        onChange={e => setCompanySettings({...companySettings, exotel_sid: e.target.value})}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Webhook Transmission Gateway</label>
+                      <div className="flex gap-3">
+                         <input 
+                          readOnly 
+                          value={`${import.meta.env.VITE_API_BASE_URL || 'https://api.yourdomain.com'}/api/webhook/exotel/${user.company_id}`} 
+                          className="flex-1 bg-white border border-[#F0EEF8] rounded-xl px-4 py-3 text-xs font-mono text-gray-400 italic" 
+                         />
+                         <button type="button" className="p-3 bg-white border border-[#F0EEF8] rounded-xl text-gray-400 hover:text-indigo-600 transition-colors">
+                            <Copy size={18} />
+                         </button>
+                      </div>
+                      <p className="text-[10px] text-gray-400 font-bold px-2 mt-2 leading-relaxed">
+                         Configure this URL in your Exotel Passthru dashboard to begin capturing incoming lead transmissions.
+                      </p>
+                    </div>
+                 </div>
+               )}
 
                <div className="flex gap-4 pt-6 justify-end">
-                 <button className="px-8 py-4 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-indigo-600 transition-all">Test Signal</button>
+                 <button type="button" className="px-8 py-4 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-indigo-600 transition-all">Test Signal</button>
                  <button 
                   onClick={handleUpdateSettings}
                   disabled={saving}

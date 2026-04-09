@@ -15,16 +15,48 @@ exports.getCompanySettings = async (req, res) => {
   }
 };
 
-/**
- * Update company identifier profile
- */
 exports.updateCompanySettings = async (req, res) => {
   const { company_id } = req.user;
-  const { name, owner_email } = req.body;
+  const { 
+    name, 
+    email, 
+    auto_assignment, 
+    telephony_provider,
+    exotel_api_key, 
+    exotel_api_token, 
+    exotel_sid,
+    acefone_api_key,
+    acefone_api_token
+  } = req.body;
+
   try {
-    await db.query('UPDATE companies SET name = ?, owner_email = ? WHERE id = ?', [name, owner_email, company_id]);
-    res.json({ message: 'Identity profile synced' });
+    await db.query(`
+      UPDATE companies 
+      SET name = ?, 
+          email = ?, 
+          auto_assignment = ?,
+          telephony_provider = ?,
+          exotel_api_key = ?, 
+          exotel_api_token = ?, 
+          exotel_sid = ?,
+          acefone_api_key = ?,
+          acefone_api_token = ?
+      WHERE id = ?
+    `, [
+      name, 
+      email, 
+      auto_assignment, 
+      telephony_provider,
+      exotel_api_key, 
+      exotel_api_token, 
+      exotel_sid,
+      acefone_api_key,
+      acefone_api_token,
+      company_id
+    ]);
+    res.json({ message: 'Identity profile and telephony bridge synced' });
   } catch (err) {
+    console.error('updateCompanySettings error:', err);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };

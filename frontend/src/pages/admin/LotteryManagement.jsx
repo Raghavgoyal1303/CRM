@@ -11,22 +11,28 @@ import {
   Trophy
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import api from '../../api';
+import { useAuth } from '../../context/AuthContext';
 
 const LotteryManagement = () => {
+  const { user } = useAuth();
   const [campaigns, setCampaigns] = useState([]);
+  const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchCampaigns();
+    fetchData();
   }, []);
 
-  const fetchCampaigns = async () => {
+  const fetchData = async () => {
     try {
-      const response = await fetch('/api/lottery/campaigns', {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-      });
-      const data = await response.json();
-      setCampaigns(data);
+      const isSuper = user?.role === 'superadmin';
+      const [campRes, statsRes] = await Promise.all([
+        api.get('/lottery/campaigns'),
+        isSuper ? api.get('/super/lottery-stats') : Promise.resolve({ data: null })
+      ]);
+      setCampaigns(campRes.data || []);
+      setStats(statsRes.data);
     } catch (err) {
       console.error(err);
     } finally {
@@ -107,10 +113,10 @@ const LotteryManagement = () => {
       {/* Stats Row */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {[
-          { label: 'Total Sold', value: '1,247', icon: Ticket, color: 'text-indigo-600', bg: 'bg-indigo-50' },
-          { label: 'Revenue', value: '₹13.7L', icon: IndianRupee, color: 'text-emerald-500', bg: 'bg-emerald-50' },
-          { label: 'Paid', value: '1,102', icon: Trophy, color: 'text-amber-500', bg: 'bg-amber-50' },
-          { label: 'Winning Tokens', value: '100', icon: Trophy, color: 'text-rose-500', bg: 'bg-rose-50' },
+          { label: 'Total Sold', value: stats?.total_sold || '0', icon: Ticket, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+          { label: 'Revenue', value: stats?.revenue ? `₹${(stats.revenue / 100000).toFixed(1)}L` : '₹0', icon: IndianRupee, color: 'text-emerald-500', bg: 'bg-emerald-50' },
+          { label: 'Paid', value: stats?.paid || '0', icon: Trophy, color: 'text-amber-500', bg: 'bg-amber-50' },
+          { label: 'Winning Tokens', value: stats?.winning_tokens || '100', icon: Trophy, color: 'text-rose-500', bg: 'bg-rose-50' },
         ].map((stat, idx) => (
           <div key={idx} className="bg-white p-6 rounded-[24px] border border-[#F0EEF8] shadow-sm hover:shadow-md transition-shadow">
             <div className={`w-12 h-12 ${stat.bg} ${stat.color} rounded-2xl flex items-center justify-center mb-4`}>

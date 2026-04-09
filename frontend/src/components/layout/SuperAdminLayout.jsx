@@ -1,9 +1,9 @@
-import { 
-  BarChart3, 
-  Building2, 
-  Users, 
-  ShieldCheck, 
-  Settings, 
+import {
+  BarChart3,
+  Building2,
+  Users,
+  ShieldCheck,
+  Settings,
   LogOut,
   Infinity,
   Target,
@@ -38,8 +38,8 @@ const SuperAdminLayout = ({ children }) => {
     { title: 'Call Logs', icon: History, path: '/super/call-logs' },
     { type: 'divider' },
     { title: 'Campaigns Overview', icon: Radio, path: '/super/campaigns' },
-    // { title: 'Communications', icon: Send, path: '/super/communications' },
-    // { title: 'Blacklist Monitor', icon: PhoneOff, path: '/super/blacklist' },
+    { title: 'Communications', icon: Send, path: '/super/communications' },
+    { title: 'Blacklist Monitor', icon: PhoneOff, path: '/super/blacklist' },
     { type: 'divider' },
     { title: 'Lottery Overview', icon: Ticket, path: '/super/lottery' },
     { title: 'Developer / API', icon: Code2, path: '/super/api-keys' },
@@ -72,8 +72,8 @@ const SuperAdminLayout = ({ children }) => {
                 to={item.path}
                 className={({ isActive }) => `
                   flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group
-                  ${isActive 
-                    ? 'bg-indigo-50 text-indigo-600 font-bold shadow-sm' 
+                  ${isActive
+                    ? 'bg-indigo-50 text-indigo-600 font-bold shadow-sm'
                     : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}
                 `}
               >
@@ -89,7 +89,7 @@ const SuperAdminLayout = ({ children }) => {
         </nav>
 
         <div className="p-4 border-t border-[#F0EEF8]">
-          <Link 
+          <Link
             to="/"
             className="w-full flex items-center justify-center gap-2 px-4 py-2 text-indigo-600 hover:bg-indigo-50 transition-all duration-200 rounded-[10px] text-[10px] font-black uppercase tracking-widest mb-2"
           >
@@ -103,7 +103,7 @@ const SuperAdminLayout = ({ children }) => {
                 <p className="text-[10px] text-indigo-300 uppercase tracking-widest font-black">Full Access</p>
               </div>
             </div>
-            <button 
+            <button
               onClick={handleLogout}
               className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-indigo-800 hover:bg-indigo-700 transition-colors text-xs font-bold"
             >
@@ -122,7 +122,7 @@ const SuperAdminLayout = ({ children }) => {
           {children}
         </div>
       </main>
-</div>
+    </div>
   );
 };
 

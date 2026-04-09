@@ -11,6 +11,8 @@ import {
   LogIn 
 } from 'lucide-react';
 
+import api from '../../api';
+
 const AuditLog = () => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,11 +25,8 @@ const AuditLog = () => {
   const fetchLogs = async () => {
     try {
       const queryParams = new URLSearchParams(filters).toString();
-      const response = await fetch(`/api/audit?${queryParams}`, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-      });
-      const data = await response.json();
-      setLogs(data.logs || []);
+      const response = await api.get(`/audit?${queryParams}`);
+      setLogs(response.data.logs || []);
     } catch (err) {
       console.error(err);
     } finally {
@@ -116,7 +115,14 @@ const AuditLog = () => {
                     <div className="flex items-center gap-2 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-100">
                       <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest leading-none">Result</span>
                       <span className="text-xs font-mono font-bold text-emerald-700 leading-none truncate max-w-[200px]">
-                        {Object.values(JSON.parse(log.new_value))[0]}
+                        {(() => {
+                          try {
+                            const val = typeof log.new_value === 'string' ? JSON.parse(log.new_value) : log.new_value;
+                            return val ? (typeof val === 'object' ? Object.values(val)[0] : String(val)) : 'N/A';
+                          } catch (e) {
+                            return 'Complex Data';
+                          }
+                        })()}
                       </span>
                     </div>
                   )}

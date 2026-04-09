@@ -1,8 +1,9 @@
 import React from 'react';
 import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
-import { 
+import { useAuth } from '../../context/AuthContext';
+import {
   Home,
-  Target, 
+  Target,
   Clock,
   Phone,
   BarChart2,
@@ -34,7 +35,7 @@ const EmployeeLayout = ({ children }) => {
     { path: '/dashboard/follow-ups', icon: Clock, label: 'Follow-ups' },
     { path: '/dashboard/outbound', icon: Radio, label: 'Outbound' },
     { path: '/dashboard/calls', icon: Phone, label: 'Call Hist.' },
-    // { path: '/dashboard/communications', icon: Send, label: 'My Comms' },
+    { path: '/dashboard/communications', icon: Send, label: 'My Comms' },
     { path: '/dashboard/performance', icon: BarChart2, label: 'My Perf.' },
   ];
 
@@ -70,25 +71,25 @@ const EmployeeLayout = ({ children }) => {
               )}
             </NavLink>
           ))}
-          
+
         </nav>
 
         <div className="p-6 border-t border-gray-100 bg-[#FBFBFE]">
-           <button 
-             onClick={handleLogout}
-             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all font-bold text-sm mb-4"
-           >
-             <LogOut size={18} /> Exit Portal
-           </button>
-           <div className="flex items-center gap-3 px-2">
-              <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-black text-xs shadow-sm">
-                {user?.name?.charAt(0)}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[13px] font-black text-indigo-900 truncate">{user?.name || 'Sales Rep'}</p>
-                <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest">Sales Operative</p>
-              </div>
-           </div>
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all font-bold text-sm mb-4"
+          >
+            <LogOut size={18} /> Exit Portal
+          </button>
+          <div className="flex items-center gap-3 px-2">
+            <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-black text-xs shadow-sm">
+              {user?.name?.charAt(0)}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[13px] font-black text-indigo-900 truncate">{user?.name || 'Sales Rep'}</p>
+              <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest">Sales Operative</p>
+            </div>
+          </div>
         </div>
       </aside>
 
@@ -96,20 +97,20 @@ const EmployeeLayout = ({ children }) => {
       <div className="flex-1 min-w-0 flex flex-col relative overflow-hidden">
         {/* Topbar */}
         <header className="h-20 bg-[#F9F7F4]/80 backdrop-blur-md flex items-center justify-between px-6 lg:px-12 flex-shrink-0 z-40">
-           <div className="lg:block">
-              <h1 className="text-xl font-heading font-black text-indigo-900 tracking-tight">
-                Good morning, {user?.name?.split(' ')[0] || 'Sales Rep'} 👋
-              </h1>
-              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">{today}</p>
-           </div>
-           
-           <div className="flex items-center gap-4">
-              <button className="w-11 h-11 bg-white border border-[#F0EEF8] rounded-2xl flex items-center justify-center text-gray-400 hover:text-indigo-600 transition-all relative shadow-sm">
-                 <Bell size={20} />
-                 <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-white" />
-              </button>
-              <UserMenu />
-           </div>
+          <div className="lg:block">
+            <h1 className="text-xl font-heading font-black text-indigo-900 tracking-tight">
+              Good morning, {user?.name?.split(' ')[0] || 'Sales Rep'} 👋
+            </h1>
+            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">{today}</p>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <button className="w-11 h-11 bg-white border border-[#F0EEF8] rounded-2xl flex items-center justify-center text-gray-400 hover:text-indigo-600 transition-all relative shadow-sm">
+              <Bell size={20} />
+              <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-white" />
+            </button>
+            <UserMenu />
+          </div>
         </header>
 
         {/* Dynamic Content */}
@@ -124,9 +125,9 @@ const EmployeeLayout = ({ children }) => {
           {navItems.map((item) => {
             const isActive = location.pathname === item.path || (item.path === '/dashboard' && location.pathname === '/dashboard/');
             return (
-              <Link 
-                key={item.path} 
-                to={item.path} 
+              <Link
+                key={item.path}
+                to={item.path}
                 className={`flex flex-col items-center gap-1 transition-all duration-300 ${isActive ? 'text-indigo-600 scale-110' : 'text-gray-400'}`}
               >
                 <div className={`p-2 rounded-xl transition-all ${isActive ? 'bg-indigo-50' : 'bg-transparent'}`}>

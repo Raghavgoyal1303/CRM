@@ -52,11 +52,17 @@ export const leadsApi = leadService;
 const employeeSvc = {
   getAll: () => api.get('/employees'),
   create: (data) => api.post('/employees', data),
+  update: (id, data) => api.patch(`/employees/${id}`, data),
   delete: (id) => api.delete(`/employees/${id}`),
   resetPassword: (id, newPassword) => api.patch(`/employees/${id}/reset-password`, { newPassword }),
 };
 export const employees = employeeSvc;
-export const employeeApi = employeeSvc;
+export const employeeApi = { 
+  ...employeeSvc, 
+  getEmployees: employeeSvc.getAll,
+  createEmployee: employeeSvc.create,
+  updateEmployee: employeeSvc.update
+};
 export const employeesApi = employeeSvc;
 
 // 5. Multi-channel Communications
@@ -120,6 +126,7 @@ export const autoResponseApi = arService;
 // 11. Business Intelligence
 const analyticsService = {
   getDashboard: () => api.get('/analytics/dashboard'),
+  getPerformance: () => api.get('/analytics/performance'),
   getCallStats: () => api.get('/analytics/calls'),
   getPipeline: () => api.get('/analytics/pipeline'),
 };
@@ -159,5 +166,11 @@ const developerService = {
   getLogs: (id) => api.get(`/developer/keys/${id}/logs`),
 };
 export const developerApi = developerService;
+
+// 16. Telephony Bridge
+const telephonyService = {
+  acefoneCall: (leadId) => api.post('/telephony/acefone/call', { leadId }),
+};
+export const telephonyApi = telephonyService;
 
 export default api;

@@ -1,12 +1,12 @@
 import React from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
-import { 
-  Building2, 
-  Users, 
-  Target, 
-  History, 
-  Clock, 
-  Settings, 
+import {
+  Building2,
+  Users,
+  Target,
+  History,
+  Clock,
+  Settings,
   LogOut,
   Infinity,
   BarChart3,
@@ -41,9 +41,9 @@ const AdminLayout = ({ children }) => {
     { type: 'divider' },
     { title: 'Campaigns', icon: Radio, path: '/admin/campaigns' },
     { title: 'Outbound Leads', icon: UserCheck, path: '/admin/outbound-leads' },
-    // { title: 'Communications', icon: Send, path: '/admin/communications' },
-    // { title: 'Blacklist', icon: PhoneOff, path: '/admin/blacklist' },
-    // { title: 'Retry Queue', icon: ListRestart, path: '/admin/retry-queue' },
+    { title: 'Communications', icon: Send, path: '/admin/communications' },
+    { title: 'Blacklist', icon: PhoneOff, path: '/admin/blacklist' },
+    { title: 'Retry Queue', icon: ListRestart, path: '/admin/retry-queue' },
     { type: 'divider' },
     { title: 'Lottery', icon: Ticket, path: '/admin/lottery' },
     { title: 'Developer API', icon: Code2, path: '/admin/developer' },
@@ -74,8 +74,8 @@ const AdminLayout = ({ children }) => {
                 to={item.path}
                 className={({ isActive }) => `
                   flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 group
-                  ${isActive 
-                    ? 'bg-indigo-50 text-indigo-600 font-bold shadow-sm' 
+                  ${isActive
+                    ? 'bg-indigo-50 text-indigo-600 font-bold shadow-sm'
                     : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}
                 `}
               >
@@ -98,14 +98,14 @@ const AdminLayout = ({ children }) => {
                 {user?.company_name?.charAt(0) || 'C'}
               </div>
               <div className="flex-1 min-w-0">
-                 <p className="text-sm font-bold text-gray-900 truncate">{user?.company_name || 'My Company'}</p>
-                 <div className="flex items-center gap-1.5 mt-0.5">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                    <p className="text-[10px] text-emerald-600 font-black uppercase tracking-wider">Active License</p>
-                 </div>
+                <p className="text-sm font-bold text-gray-900 truncate">{user?.company_name || 'My Company'}</p>
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  <p className="text-[10px] text-emerald-600 font-black uppercase tracking-wider">Active License</p>
+                </div>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-2 border-t border-gray-100 pt-3">
               <div className="w-8 h-8 rounded-full bg-white border border-[#F0EEF8] flex items-center justify-center text-[10px] font-black text-gray-400">
                 {user?.name?.charAt(0)}
@@ -132,7 +132,7 @@ const AdminLayout = ({ children }) => {
           {children}
         </div>
       </main>
-</div>
+    </div>
   );
 };
 

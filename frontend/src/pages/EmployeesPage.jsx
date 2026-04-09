@@ -26,14 +26,19 @@ const EmployeesPage = () => {
   const [performance, setPerformance] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [openMenuId, setOpenMenuId] = useState(null);
+  const [selectedEmp, setSelectedEmp] = useState(null);
+  const [newPassword, setNewPassword] = useState('');
   
   const [formData, setFormData] = useState({ 
     name: '', 
     email: '', 
     phone_number: '', 
     password: '', 
-    role: 'employee' 
+    role: 'employee',
+    acefone_extension: ''
   });
   
   const [emailPrefix, setEmailPrefix] = useState('');
@@ -100,11 +105,39 @@ const EmployeesPage = () => {
     }
   };
 
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    if (!selectedEmp || !newPassword) return;
+    setFormLoading(true);
+    try {
+      await employeeApi.resetPassword(selectedEmp.id, { newPassword });
+      setShowResetModal(false);
+      setNewPassword('');
+      alert(`Success: Access cipher for ${selectedEmp.name} has been updated.`);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to reset password');
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const handleDeleteEmployee = async (id, name) => {
+    if (window.confirm(`CAUTION: Are you sure you want to REVOKE ACCESS for ${name}? This will perform a soft-delete.`)) {
+      try {
+        await employeeApi.deleteEmployee(id);
+        fetchData();
+        setOpenMenuId(null);
+      } catch (err) {
+        console.error('Failed to delete operative');
+      }
+    }
+  };
+
   const getPerf = (id) => performance.find(p => p.employee_id === id) || { total_leads: 0, closed_leads: 0, conversion_rate: 0 };
 
   const stats = {
     total: employees.length,
-    active: employees.filter(e => e.is_active !== 0).length,
+    active: employees.filter(e => e.is_online === 1).length,
     avgConv: performance.length > 0 
       ? Math.round(performance.reduce((acc, p) => acc + (p.conversion_rate || 0), 0) / performance.length) 
     : 0
@@ -189,7 +222,7 @@ const EmployeesPage = () => {
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400">Role</th>
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400">Status</th>
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400">Total Leads</th>
-                <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400">Conv. %</th>
+                <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400">Acefone Ext</th>
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400 text-right">Actions</th>
               </tr>
             </thead>
@@ -202,8 +235,11 @@ const EmployeesPage = () => {
                   <tr key={emp.id} className="hover:bg-[#FAFAFA] group transition-colors">
                     <td className="px-6 py-5">
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-heading font-black text-xs uppercase shadow-lg shadow-indigo-100 group-hover:scale-110 transition-transform">
+                        <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-heading font-black text-xs uppercase shadow-lg shadow-indigo-100 group-hover:scale-110 transition-transform relative">
                           {emp.name?.split(' ').map(n => n[0]).join('') || '?'}
+                          {emp.is_online === 1 && (
+                            <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-white animate-pulse" />
+                          )}
                         </div>
                         <div className="flex flex-col">
                            <span className="text-sm font-bold text-indigo-900">{emp.name}</span>
@@ -236,10 +272,50 @@ const EmployeesPage = () => {
                           </div>
                        </div>
                     </td>
-                    <td className="px-6 py-5 text-right">
-                       <button className="p-2 text-gray-300 hover:text-indigo-600 transition-colors">
+                    <td className="px-6 py-5">
+                       <span className="text-xs font-mono font-bold text-indigo-600">{emp.acefone_extension || '—'}</span>
+                    </td>
+                    <td className="px-6 py-5 text-right relative">
+                       <button 
+                        onClick={() => setOpenMenuId(openMenuId === emp.id ? null : emp.id)}
+                        className={`p-2 rounded-lg transition-all ${openMenuId === emp.id ? 'bg-indigo-50 text-indigo-600' : 'text-gray-300 hover:text-indigo-600'}`}
+                       >
                           <MoreVertical size={18} />
                        </button>
+
+                       <AnimatePresence>
+                        {openMenuId === emp.id && (
+                          <>
+                            <div className="fixed inset-0 z-10" onClick={() => setOpenMenuId(null)} />
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                              animate={{ opacity: 1, scale: 1, y: 0 }}
+                              exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                              className="absolute right-6 top-16 w-48 bg-white rounded-2xl shadow-2xl border border-[#F0EEF8] z-20 py-2 overflow-hidden"
+                            >
+                               <button 
+                                onClick={() => {
+                                  setSelectedEmp(emp);
+                                  setShowResetModal(true);
+                                  setOpenMenuId(null);
+                                }}
+                                className="w-full px-4 py-3 flex items-center gap-3 text-xs font-bold text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                               >
+                                  <RefreshCcw size={14} />
+                                  <span>Reset Cipher</span>
+                               </button>
+                               <div className="h-[1px] bg-[#F0EEF8] mx-2" />
+                               <button 
+                                onClick={() => handleDeleteEmployee(emp.id, emp.name)}
+                                className="w-full px-4 py-3 flex items-center gap-3 text-xs font-bold text-rose-400 hover:bg-rose-50 hover:text-rose-600 transition-colors"
+                               >
+                                  <Trash2 size={14} />
+                                  <span>Revoke Access</span>
+                               </button>
+                            </motion.div>
+                          </>
+                        )}
+                       </AnimatePresence>
                     </td>
                   </tr>
                 );
@@ -328,6 +404,17 @@ const EmployeesPage = () => {
                  </div>
 
                  <div className="space-y-1.5 focus-within:text-indigo-600 transition-colors">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Acefone Operative Extension</label>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. 1001"
+                      className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-[16px] px-4 py-3.5 text-xs font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                      value={formData.acefone_extension}
+                      onChange={e => setFormData({ ...formData, acefone_extension: e.target.value })}
+                    />
+                 </div>
+
+                 <div className="space-y-1.5 focus-within:text-indigo-600 transition-colors">
                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Access Role Archetype</label>
                     <select 
                       className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-[16px] px-4 py-3.5 text-sm font-black text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all appearance-none cursor-pointer"
@@ -381,6 +468,79 @@ const EmployeesPage = () => {
                       className="flex-1 btn-primary py-4 rounded-[16px] text-xs font-black uppercase tracking-widest shadow-lg shadow-indigo-50 flex items-center justify-center"
                     >
                       {formLoading ? <RefreshCcw size={18} className="animate-spin" /> : 'Commit Deployment'}
+                    </button>
+                 </div>
+              </form>
+            </motion.div>
+          </>
+        )}
+        {/* Reset Password Modal */}
+        {showResetModal && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => !formLoading && setShowResetModal(false)}
+              className="fixed inset-0 bg-indigo-900/20 backdrop-blur-[4px] z-[80]"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[420px] bg-white rounded-[32px] shadow-2xl z-[90] p-8 border border-[#F0EEF8]"
+            >
+              <div className="flex items-center justify-between mb-8">
+                 <div>
+                    <h2 className="text-xl font-heading font-black text-indigo-900 tracking-tight">Recipher Operative</h2>
+                    <p className="text-[11px] text-gray-400 font-black uppercase tracking-widest mt-1">{selectedEmp?.name}</p>
+                 </div>
+                 <button 
+                  onClick={() => !formLoading && setShowResetModal(false)}
+                  className="w-10 h-10 rounded-full hover:bg-[#F9F7F4] flex items-center justify-center text-gray-400 hover:text-indigo-600 transition-all"
+                 >
+                    <X size={24} />
+                 </button>
+              </div>
+
+              <form onSubmit={handleResetPassword} className="space-y-6">
+                 <div className="space-y-2 focus-within:text-indigo-600 transition-colors">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">New Access Cipher</label>
+                    <div className="relative">
+                       <input 
+                        required
+                        autoFocus
+                        type={showPassword ? 'text' : 'password'} 
+                        placeholder="••••••••"
+                        className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-[16px] px-4 py-3.5 text-sm font-mono font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                        value={newPassword}
+                        onChange={e => setNewPassword(e.target.value)}
+                       />
+                       <button 
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-indigo-600"
+                       >
+                          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                       </button>
+                    </div>
+                 </div>
+
+                 <div className="flex gap-4">
+                    <button 
+                      type="button" 
+                      disabled={formLoading}
+                      onClick={() => setShowResetModal(false)}
+                      className="flex-1 py-4 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-indigo-600 hover:bg-[#F9F7F4] rounded-[16px] transition-all"
+                    >
+                      Abort
+                    </button>
+                    <button 
+                      type="submit" 
+                      disabled={formLoading}
+                      className="flex-1 btn-primary py-4 rounded-[16px] text-xs font-black uppercase tracking-widest shadow-lg shadow-indigo-50 flex items-center justify-center"
+                    >
+                      {formLoading ? <RefreshCcw size={18} className="animate-spin" /> : 'Confirm New Cipher'}
                     </button>
                  </div>
               </form>

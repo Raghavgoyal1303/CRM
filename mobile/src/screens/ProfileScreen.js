@@ -32,7 +32,7 @@ const ProfileScreen = ({ navigation }) => {
   const handleLogout = () => {
     Alert.alert(
       'Logout',
-      'Are you sure you want to exit LeadFlow?',
+      'Are you sure you want to exit Tricity Verified?',
       [
         { text: 'Cancel', style: 'cancel' },
         { text: 'Yes, Logout', onPress: logout }
@@ -79,7 +79,7 @@ const ProfileScreen = ({ navigation }) => {
            <SettingItem 
              icon={HelpCircle} 
              label="Help & Support" 
-             onPress={() => Alert.alert('LeadFlow Support', 'Dedicated line: +91 90000 00000')}
+             onPress={() => Alert.alert('Tricity Verified Support', 'Dedicated line: +91 90000 00000')}
            />
            <SettingItem 
              icon={LogOut} 
@@ -90,7 +90,7 @@ const ProfileScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.footer}>
-           <Text style={styles.footerText}>LeadFlow CRM v47.0.1</Text>
+           <Text style={styles.footerText}>Tricity Verified CRM v47.0.1</Text>
         </View>
       </ScrollView>
     </View>

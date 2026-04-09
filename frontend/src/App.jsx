@@ -19,7 +19,10 @@ import SuperSettings from './pages/superadmin/SuperSettings';
 import ActivityFeed from './pages/superadmin/ActivityFeed';
 import CampaignsOverview from './pages/superadmin/CampaignsOverview';
 import GlobalCommunications from './pages/superadmin/GlobalCommunications';
-import { AllLeads, AllEmployees, CallLogs, Analytics } from './pages/superadmin/GlobalStubs';
+import SuperLeads from './pages/superadmin/SuperLeads';
+import SuperEmployees from './pages/superadmin/SuperEmployees';
+import SuperCallLogs from './pages/superadmin/SuperCallLogs';
+import SuperAnalytics from './pages/superadmin/SuperAnalytics';
 import { ShieldAlert } from 'lucide-react';
 
 // Admin/Employee Shared Pages
@@ -152,17 +155,17 @@ function App() {
                 <Route path="dashboard" element={<SuperDashboard />} />
                 <Route path="companies" element={<Companies />} />
                 <Route path="companies/:id" element={<CompanyDetail />} />
-                <Route path="leads" element={<AllLeads />} />
-                <Route path="employees" element={<AllEmployees />} />
-                <Route path="call-logs" element={<CallLogs />} />
-                <Route path="analytics" element={<Analytics />} />
+                <Route path="leads" element={<SuperLeads />} />
+                <Route path="employees" element={<SuperEmployees />} />
+                <Route path="call-logs" element={<SuperCallLogs />} />
+                <Route path="analytics" element={<SuperAnalytics />} />
                 <Route path="activity" element={<ActivityFeed />} />
                 <Route path="campaigns" element={<CampaignsOverview />} />
                 <Route path="communications" element={<GlobalCommunications />} />
                 <Route path="blacklist" element={<div className="p-20 text-center font-bold text-gray-400">Blacklist Monitor Stub</div>} />
-                <Route path="audit" element={<ProtectedRoute roles={['superadmin']}><AuditLog /></ProtectedRoute>} />
-                <Route path="api-keys" element={<ProtectedRoute roles={['superadmin']}><DeveloperAPI /></ProtectedRoute>} />
-                <Route path="lottery" element={<ProtectedRoute roles={['superadmin']}><LotteryManagement /></ProtectedRoute>} />
+                <Route path="audit" element={<AuditLog />} />
+                <Route path="api-keys" element={<DeveloperAPI />} />
+                <Route path="lottery" element={<LotteryManagement />} />
                 <Route path="settings" element={<SuperSettings />} />
                 <Route path="*" element={<Navigate to="dashboard" replace />} />
               </Routes>

@@ -50,11 +50,6 @@ const AppHeader = ({ title, leftIcon = 'menu', rightActions = ['notif', 'avatar'
               <User size={20} color="#fff" />
             </TouchableOpacity>
           )}
-          {rightActions.includes('menu') && (
-            <TouchableOpacity style={styles.iconBtn} onPress={handleMenuPress}>
-              <MoreVertical size={24} color="#fff" />
-            </TouchableOpacity>
-          )}
         </View>
       </View>
     </View>

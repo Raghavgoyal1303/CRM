@@ -10,18 +10,101 @@ exports.getGlobalStats = async (req, res) => {
     const { rows: companies } = await db.query('SELECT COUNT(*) as count FROM companies');
     const { rows: leads } = await db.query('SELECT COUNT(*) as count FROM leads');
     const { rows: employees } = await db.query('SELECT COUNT(*) as count FROM employees WHERE role = "employee"');
+    const { rows: revenue } = await db.query('SELECT SUM(payment_amount) as total FROM lottery_participants WHERE payment_status = "paid"');
     
-    // Total revenue simulation
-    const totalRevenue = companies[0].count * 9.99;
-
     res.json({
       totalCompanies: companies[0].count,
       totalLeads: leads[0].count,
       totalEmployees: employees[0].count,
-      totalRevenue: totalRevenue.toFixed(2),
+      totalRevenue: revenue[0].total || 0,
       activeSyncNodes: 42
     });
   } catch (err) {
+    console.error('getGlobalStats error:', err);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+exports.getGlobalLeads = async (req, res) => {
+  try {
+    const { rows } = await db.query(`
+      SELECT l.*, c.name as company_name 
+      FROM leads l 
+      JOIN companies c ON l.company_id = c.id 
+      ORDER BY l.created_at DESC LIMIT 500
+    `);
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+exports.getGlobalEmployees = async (req, res) => {
+  try {
+    const { rows } = await db.query(`
+      SELECT e.id, e.name, e.email, e.role, e.created_at, c.name as company_name 
+      FROM employees e 
+      LEFT JOIN companies c ON e.company_id = c.id 
+      ORDER BY e.created_at DESC
+    `);
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+exports.getGlobalCallLogs = async (req, res) => {
+  try {
+    const { rows } = await db.query(`
+      SELECT cl.*, c.name as company_name 
+      FROM call_logs cl 
+      JOIN companies c ON cl.company_id = c.id 
+      ORDER BY cl.created_at DESC LIMIT 500
+    `);
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+exports.getGlobalAnalytics = async (req, res) => {
+  try {
+    // Basic platform-wide growth analytics
+    const { rows: monthlyleads } = await db.query(`
+      SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as count 
+      FROM leads 
+      GROUP BY month 
+      ORDER BY month DESC LIMIT 12
+    `);
+    res.json({
+      leadGrowth: monthlyleads.reverse(),
+      topCompanies: [] // Placeholder for v2
+    });
+  } catch (err) {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+exports.getGlobalLotteryStats = async (req, res) => {
+  try {
+    const { rows: counts } = await db.query(`
+      SELECT 
+        COUNT(*) as total_participants,
+        SUM(CASE WHEN payment_status = 'paid' THEN 1 ELSE 0 END) as paid_count,
+        SUM(CASE WHEN payment_status = 'paid' THEN payment_amount ELSE 0 END) as total_revenue
+      FROM lottery_participants
+    `);
+    
+    // Static / estimated values for things we don't track in DB yet
+    res.json({
+      ...counts[0],
+      total_sold: counts[0].total_participants,
+      revenue: counts[0].total_revenue,
+      paid: counts[0].paid_count,
+      winning_tokens: 100 // Constant
+    });
+  } catch (err) {
+    console.error('getGlobalLotteryStats error:', err);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };

@@ -17,6 +17,11 @@ const query = async (text, params) => {
   return { rows };
 };
 
+// Helper for executed queries (Prepared Statements)
+const execute = async (text, params) => {
+  return await pool.execute(text, params);
+};
+
 /**
  * Atomic Transaction Helper
  * Ensures all queries inside the callback use the SAME connection.
@@ -36,4 +41,4 @@ const transaction = async (callback) => {
   }
 };
 
-module.exports = { query, pool, transaction };
+module.exports = { query, pool, transaction, execute };

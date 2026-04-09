@@ -19,7 +19,7 @@ Sentry.init({
   integrations: [
     nodeProfilingIntegration(),
   ],
-  tracesSampleRate: 1.0, 
+  tracesSampleRate: 1.0,
   profilesSampleRate: 1.0,
 });
 
@@ -32,18 +32,29 @@ if (process.env.NODE_ENV === 'production') {
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
-  'https://app.leadflowcrm.com',
-  'https://leadflowcrm.com'
+  'https://app.tricityverified.com',
+  'https://tricityverified.com',
+  'https://www.tricityverified.com'
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
+    // 1. Allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
+
+    // 2. Allow specific whitelisted origins
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
     }
-    return callback(null, true);
+
+    // 3. Dynamic: Allow any local network IP (192.168.x.x or 10.x.x.x) during development
+    const isLocalNetwork = origin.startsWith('http://192.168.') || origin.startsWith('http://10.');
+    if (process.env.NODE_ENV !== 'production' && isLocalNetwork) {
+      return callback(null, true);
+    }
+
+    var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+    return callback(new Error(msg), false);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT', 'OPTIONS'],
@@ -70,6 +81,7 @@ app.use('/api/blacklist', require('./routes/blacklist'));
 app.use('/api/retry-queue', require('./routes/retryQueue'));
 app.use('/api/communications', require('./routes/communications'));
 app.use('/api/auto-response-settings', require('./routes/autoResponseSettings'));
+app.use('/api/telephony', require('./routes/telephony'));
 
 // New Features (Phase 1 & 2)
 app.use('/api/lottery', require('./routes/lottery'));
@@ -86,15 +98,15 @@ Sentry.setupExpressErrorHandler(app);
 app.get('/health', async (req, res) => {
   try {
     await db.query('SELECT 1');
-    res.status(200).json({ 
-      status: 'OK', 
+    res.status(200).json({
+      status: 'OK',
       database: 'Connected',
-      timestamp: new Date(), 
-      env: process.env.NODE_ENV || 'development' 
+      timestamp: new Date(),
+      env: process.env.NODE_ENV || 'development'
     });
   } catch (err) {
-    res.status(503).json({ 
-      status: 'ERROR', 
+    res.status(503).json({
+      status: 'ERROR',
       database: 'Disconnected',
       error: err.message,
       timestamp: new Date()
@@ -103,7 +115,7 @@ app.get('/health', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-const HOST = '0.0.0.0'; 
+const HOST = '0.0.0.0';
 
 app.listen(PORT, HOST, () => {
   console.log(`Backend server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);

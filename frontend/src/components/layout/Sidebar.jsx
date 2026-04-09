@@ -1,12 +1,12 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Users, 
-  PhoneCall, 
-  History, 
-  CalendarCheck, 
-  Settings, 
+import { NavLink, Link } from 'react-router-dom';
+import {
+  LayoutDashboard,
+  Users,
+  PhoneCall,
+  History,
+  CalendarCheck,
+  Settings,
   LogOut,
   Square
 } from 'lucide-react';
@@ -14,7 +14,7 @@ import { useAuth } from '../../context/AuthContext';
 
 const Sidebar = () => {
   const { user, logout } = useAuth();
-  
+
   const links = [
     { name: 'Dashboard', path: user?.role === 'admin' ? '/admin' : '/dashboard', icon: LayoutDashboard },
     { name: 'Leads', path: '/leads', icon: PhoneCall },
@@ -35,7 +35,7 @@ const Sidebar = () => {
         </div>
         <span className="font-heading font-bold text-xl text-text-primary">LeadFlow CRM</span>
       </Link>
-      
+
       {/* Navigation */}
       <nav className="flex-1 px-4 space-y-1.5 mt-4">
         {links.map((link) => (
@@ -43,10 +43,9 @@ const Sidebar = () => {
             key={link.path}
             to={link.path}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-[12px] transition-all duration-200 group ${
-                isActive 
-                  ? 'bg-status-site-visit-bg text-primary font-semibold' 
-                  : 'text-text-secondary hover:bg-background hover:text-text-primary'
+              `flex items-center gap-3 px-4 py-3 rounded-[12px] transition-all duration-200 group ${isActive
+                ? 'bg-status-site-visit-bg text-primary font-semibold'
+                : 'text-text-secondary hover:bg-background hover:text-text-primary'
               }`
             }
           >
@@ -69,7 +68,7 @@ const Sidebar = () => {
             </div>
           </div>
         </div>
-        <Link 
+        <Link
           to="/"
           className="w-full flex items-center justify-center gap-2 px-4 py-2 text-primary hover:bg-indigo-50 transition-all duration-200 rounded-[10px] text-[11px] font-black uppercase tracking-widest mb-2"
         >
