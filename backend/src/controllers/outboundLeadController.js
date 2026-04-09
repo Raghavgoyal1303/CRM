@@ -1,5 +1,5 @@
 const db = require('../config/db');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 
 exports.getOutboundLeads = async (req, res) => {
   const { company_id } = req.user;
@@ -44,7 +44,7 @@ exports.convertToLead = async (req, res) => {
     if (rows.length === 0) return res.status(404).json({ message: 'Prospect not found' });
     
     const prospect = rows[0];
-    const leadId = uuidv4();
+    const leadId = randomUUID();
     
     await db.query(
       'INSERT INTO leads (id, company_id, name, phone_number, status, source) VALUES (?, ?, ?, ?, "new", "campaign")',

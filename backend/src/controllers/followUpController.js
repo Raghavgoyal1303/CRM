@@ -1,5 +1,5 @@
 const db = require('../config/db');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 
 exports.getFollowUps = async (req, res) => {
   const { company_id, role, id: user_id } = req.user;
@@ -30,7 +30,7 @@ exports.getFollowUps = async (req, res) => {
 exports.createFollowUp = async (req, res) => {
   const { company_id } = req.user;
   const { lead_id, follow_up_date, notes } = req.body;
-  const id = uuidv4();
+  const id = randomUUID();
   try {
     await db.query(
       'INSERT INTO follow_ups (id, company_id, lead_id, follow_up_date, notes, status) VALUES (?, ?, ?, ?, ?, "pending")',

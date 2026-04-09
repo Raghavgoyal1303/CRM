@@ -1,5 +1,5 @@
-const db = require('../config/db');
-const { v4: uuidv4 } = require('uuid');
+const { query } = require('../config/db');
+const { randomUUID } = require('crypto');
 
 /**
  * Access company-wide activity history
@@ -30,7 +30,7 @@ exports.getActivityLogs = async (req, res) => {
 exports.logActivity = async (req, res) => {
   const { company_id, id: user_id } = req.user;
   const { action, details } = req.body;
-  const id = uuidv4();
+  const id = randomUUID();
   try {
     await db.query(
       'INSERT INTO activity_logs (id, company_id, user_id, action, details) VALUES (?, ?, ?, ?, ?)',

@@ -1,5 +1,5 @@
 const db = require('../config/db');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 
 exports.getCommunications = async (req, res) => {
   const { company_id } = req.user;
@@ -31,7 +31,7 @@ exports.getLeadCommunications = async (req, res) => {
 exports.sendManualSMS = async (req, res) => {
   const { company_id } = req.user;
   const { phone_number, message_text, lead_id } = req.body;
-  const id = uuidv4();
+  const id = randomUUID();
   try {
     // LeadFlow logic: Log the dispatch first
     await db.query(
@@ -47,7 +47,7 @@ exports.sendManualSMS = async (req, res) => {
 exports.sendManualWhatsApp = async (req, res) => {
   const { company_id } = req.user;
   const { phone_number, message_text, lead_id, brochure_url } = req.body;
-  const id = uuidv4();
+  const id = randomUUID();
   try {
     // WhatsApp lead logic: Log with brochure support
     await db.query(

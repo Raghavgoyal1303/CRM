@@ -1,5 +1,5 @@
 const { query, transaction } = require('../config/db');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 const bcrypt = require('bcrypt');
 
 exports.getEmployees = async (req, res) => {
@@ -33,7 +33,7 @@ exports.getEmployees = async (req, res) => {
 exports.createEmployee = async (req, res) => {
   const { company_id, id: user_id } = req.user;
   const { name, email, password, phone_number, acefone_extension } = req.body;
-  const id = uuidv4();
+  const id = randomUUID();
   
   try {
     await transaction(async (connection) => {
@@ -53,7 +53,7 @@ exports.createEmployee = async (req, res) => {
       // 4. Log activity
       await connection.query(
         'INSERT INTO activity_logs (id, company_id, user_id, action, details) VALUES (?, ?, ?, ?, ?)',
-        [uuidv4(), company_id, user_id, 'Employee Onboarded', JSON.stringify({ name, email })]
+        [randomUUID(), company_id, user_id, 'Employee Onboarded', JSON.stringify({ name, email })]
       );
     });
     

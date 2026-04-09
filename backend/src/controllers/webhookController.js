@@ -1,5 +1,5 @@
 const { query, transaction } = require('../config/db');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 
 /**
  * Handle incoming LEAD pushes from external IVR/Systems using API Keys
@@ -8,7 +8,7 @@ exports.handleIvrLead = async (req, res) => {
   const { phone, name, source, notes } = req.body;
   const { companyId } = req; // Provided by apiKeyAuth
   const userId = req.user.id; // API Key owner
-  const leadId = uuidv4();
+  const leadId = randomUUID();
 
   if (!phone) {
     return res.status(400).json({ error: 'phone number is required' });
@@ -26,7 +26,7 @@ exports.handleIvrLead = async (req, res) => {
         // Upgrade existing lead if needed, or just log activity
         await connection.query(
           'INSERT INTO activity_logs (id, company_id, user_id, action, details) VALUES (?, ?, ?, ?, ?)',
-          [uuidv4(), companyId, userId, 'External Lead Ping', JSON.stringify({ phone, status: 'Existing Lead Re-Activated' })]
+          [randomUUID(), companyId, userId, 'External Lead Ping', JSON.stringify({ phone, status: 'Existing Lead Re-Activated' })]
         );
       } else {
         // 2. Create new lead
@@ -38,14 +38,14 @@ exports.handleIvrLead = async (req, res) => {
         // 3. Log initial activity
         await connection.query(
           'INSERT INTO activity_logs (id, company_id, user_id, action, details) VALUES (?, ?, ?, ?, ?)',
-          [uuidv4(), companyId, userId, 'IVR Lead Ingested', JSON.stringify({ name, source: source || 'ivr' })]
+          [randomUUID(), companyId, userId, 'IVR Lead Ingested', JSON.stringify({ name, source: source || 'ivr' })]
         );
 
         // 4. Add initial note if provided
         if (notes) {
           await connection.query(
             'INSERT INTO lead_notes (id, lead_id, company_id, note) VALUES (?, ?, ?, ?)',
-            [uuidv4(), leadId, companyId, notes]
+            [randomUUID(), leadId, companyId, notes]
           );
         }
       }
@@ -73,7 +73,7 @@ exports.handleExotelWebhook = async (req, res) => {
   console.log(`Webhook: Company ${companyId}, Phone ${CallFrom}, Status ${CallStatus}`);
 
   try {
-    const logId = uuidv4();
+    const logId = randomUUID();
     await query(
       'INSERT INTO call_logs (id, company_id, phone_number, call_status, direction) VALUES (?, ?, ?, ?, "inbound")',
       [logId, companyId, CallFrom, CallStatus === 'completed' ? 'answered' : 'missed']
@@ -85,7 +85,7 @@ exports.handleExotelWebhook = async (req, res) => {
     );
 
     if (leads.length === 0) {
-      const leadId = uuidv4();
+      const leadId = randomUUID();
       await query(
         'INSERT INTO leads (id, company_id, name, phone_number, status, source) VALUES (?, ?, ?, ?, "new", "call")',
         [leadId, companyId, 'Auto-Captured Lead', CallFrom]

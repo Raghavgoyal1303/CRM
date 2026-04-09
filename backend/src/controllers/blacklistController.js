@@ -1,5 +1,5 @@
 const db = require('../config/db');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 
 exports.getBlacklist = async (req, res) => {
   const { company_id } = req.user;
@@ -17,7 +17,7 @@ exports.getBlacklist = async (req, res) => {
 exports.addToBlacklist = async (req, res) => {
   const { company_id } = req.user;
   const { phone_number, reason } = req.body;
-  const id = uuidv4();
+  const id = randomUUID();
   try {
     // Check for existing records
     const { rows: exists } = await db.query('SELECT id FROM blacklist WHERE company_id = ? AND phone_number = ?', [company_id, phone_number]);

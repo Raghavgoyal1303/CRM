@@ -1,7 +1,7 @@
 const { query, transaction } = require('../config/db');
 const acefoneService = require('../services/telephony/acefoneService');
 const { assignRoundRobin } = require('../services/assignmentService');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 
 /**
  * Handle Telephony Logic (Click-to-Call + Webhooks)
@@ -65,7 +65,7 @@ exports.handleAcefoneWebhook = async (req, res) => {
       if (existing.length === 0) {
         // Create new lead with Round Robin assignment
         const assignedEmployeeId = await assignRoundRobin(companyId);
-        targetLeadId = uuidv4();
+        targetLeadId = randomUUID();
         
         await connection.query(
           'INSERT INTO leads (id, company_id, phone_number, name, status, source, assigned_to) VALUES (?, ?, ?, ?, "new", "call", ?)',
@@ -76,7 +76,7 @@ exports.handleAcefoneWebhook = async (req, res) => {
         if (!assignedEmployeeId) {
           await connection.query(
             'INSERT INTO activity_logs (id, company_id, user_id, action, details) VALUES (?, ?, ?, ?, ?)',
-            [uuidv4(), companyId, null, 'Inbound Lead (No Agents Online)', JSON.stringify({ phone, info: 'Lead created but no authorized agents were clocked-in.' })]
+            [randomUUID(), companyId, null, 'Inbound Lead (No Agents Online)', JSON.stringify({ phone, info: 'Lead created but no authorized agents were clocked-in.' })]
           );
         }
         
@@ -89,7 +89,7 @@ exports.handleAcefoneWebhook = async (req, res) => {
       if (data.callSid && (data.duration > 0 || data.recordingUrl)) {
         await connection.query(
           'INSERT INTO call_logs (id, company_id, lead_id, call_status, duration, recording_url) VALUES (?, ?, ?, ?, ?, ?)',
-          [uuidv4(), companyId, targetLeadId, data.status, data.duration, data.recordingUrl]
+          [randomUUID(), companyId, targetLeadId, data.status, data.duration, data.recordingUrl]
         );
       }
     });

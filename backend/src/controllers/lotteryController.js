@@ -1,4 +1,5 @@
 const { query } = require('../config/db');
+const { randomUUID } = require('crypto');
 const { importParticipants } = require('../services/lotteryImportService');
 
 const lotteryController = {
@@ -25,7 +26,7 @@ const lotteryController = {
   createCampaign: async (req, res) => {
     try {
       const { name, description, price_per_token, total_tokens, start_date, end_date, draw_date, prize_description, prize_value } = req.body;
-      const id = require('uuid').v4();
+      const id = randomUUID();
       await query(
         `INSERT INTO lottery_campaigns 
         (id, company_id, name, description, price_per_token, total_tokens, campaign_start_date, campaign_end_date, draw_date, prize_description, prize_value, created_by)
@@ -104,7 +105,7 @@ const lotteryController = {
     try {
       const { id } = req.params; // campaign_id
       const data = req.body;
-      const participantId = require('uuid').v4();
+      const participantId = randomUUID();
       
       // Generate token number if not provided
       const resultCount = await query('SELECT COUNT(*) as count FROM lottery_participants WHERE campaign_id = ?', [id]);

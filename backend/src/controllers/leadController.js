@@ -1,5 +1,5 @@
 const { query, transaction } = require('../config/db');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 
 exports.getLeads = async (req, res) => {
   const { company_id, role, id: user_id } = req.user;
@@ -25,7 +25,7 @@ exports.getLeads = async (req, res) => {
 exports.createLead = async (req, res) => {
   const { company_id, id: user_id } = req.user;
   const { name, phone_number, status, source } = req.body;
-  const lead_id = uuidv4();
+  const lead_id = randomUUID();
   
   try {
     await transaction(async (connection) => {
@@ -38,7 +38,7 @@ exports.createLead = async (req, res) => {
       // 2. Trigger activity log (Check if table exists first via code logic, or assume for now)
       await connection.query(
         'INSERT INTO activity_logs (id, company_id, user_id, action, details) VALUES (?, ?, ?, ?, ?)',
-        [uuidv4(), company_id, user_id, 'Lead Captured', JSON.stringify({ name, source, method: 'Manual Web' })]
+        [randomUUID(), company_id, user_id, 'Lead Captured', JSON.stringify({ name, source, method: 'Manual Web' })]
       );
     });
 
@@ -86,7 +86,7 @@ exports.updateLeadStatus = async (req, res) => {
 
       await connection.query(
         'INSERT INTO activity_logs (id, company_id, user_id, action, details) VALUES (?, ?, ?, ?, ?)',
-        [uuidv4(), company_id, user_id, 'Status Shifted', JSON.stringify({ lead_id: id, new_status: status })]
+        [randomUUID(), company_id, user_id, 'Status Shifted', JSON.stringify({ lead_id: id, new_status: status })]
       );
     });
 
@@ -112,7 +112,7 @@ exports.addNote = async (req, res) => {
   const { id: lead_id } = req.params;
   const { content } = req.body;
   const { company_id, id: user_id } = req.user;
-  const note_id = uuidv4();
+  const note_id = randomUUID();
   
   try {
     const { rows } = await query('SELECT status FROM leads WHERE id = ? AND company_id = ?', [lead_id, company_id]);
@@ -126,7 +126,7 @@ exports.addNote = async (req, res) => {
 
       await connection.query(
         'INSERT INTO activity_logs (id, company_id, user_id, action, details) VALUES (?, ?, ?, ?, ?)',
-        [uuidv4(), company_id, user_id, 'Note Appended', JSON.stringify({ lead_id, note_id })]
+        [randomUUID(), company_id, user_id, 'Note Appended', JSON.stringify({ lead_id, note_id })]
       );
     });
 

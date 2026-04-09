@@ -1,5 +1,5 @@
 const db = require('../config/db');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 
 exports.getCallLogs = async (req, res) => {
   const { company_id } = req.user;
@@ -17,7 +17,7 @@ exports.getCallLogs = async (req, res) => {
 exports.logCall = async (req, res) => {
   const { company_id } = req.user;
   const { phone_number, call_status, duration, direction } = req.body;
-  const id = uuidv4();
+  const id = randomUUID();
   try {
     await db.query(
       'INSERT INTO call_logs (id, company_id, phone_number, call_status, duration, direction) VALUES (?, ?, ?, ?, ?, ?)',

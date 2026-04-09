@@ -1,6 +1,5 @@
 const crypto = require('crypto');
-const { query } = require('../config/db');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 
 const developerController = {
   listKeys: async (req, res) => {
@@ -24,7 +23,7 @@ const developerController = {
   generateKey: async (req, res) => {
     try {
       const { name, description, permissions, environment, rate_limit, expires_at } = req.body;
-      const keyId = uuidv4();
+      const keyId = randomUUID();
       
       // Generate the raw key
       const prefix = environment === 'test' ? 'lf_test_' : 'lf_live_';

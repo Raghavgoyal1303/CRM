@@ -1,5 +1,5 @@
 const db = require('../config/db');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 const bcrypt = require('bcrypt');
 
 /**
@@ -126,8 +126,8 @@ exports.getCompanies = async (req, res) => {
  */
 exports.createCompany = async (req, res) => {
   const { name, owner_email, plan } = req.body;
-  const companyId = uuidv4();
-  const ownerId = uuidv4();
+  const companyId = randomUUID();
+  const ownerId = randomUUID();
 
   try {
     // 1. Create company

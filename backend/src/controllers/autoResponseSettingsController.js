@@ -1,5 +1,5 @@
 const db = require('../config/db');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 
 exports.getSettings = async (req, res) => {
   const { company_id } = req.user;
@@ -40,7 +40,7 @@ exports.updateSettings = async (req, res) => {
         [sms_enabled, whatsapp_enabled, sms_template, whatsapp_template, company_id]
       );
     } else {
-      const id = uuidv4();
+      const id = randomUUID();
       await db.query(
         'INSERT INTO auto_response_settings (id, company_id, sms_enabled, whatsapp_enabled, sms_template, whatsapp_template) VALUES (?, ?, ?, ?, ?, ?)',
         [id, company_id, sms_enabled, whatsapp_enabled, sms_template, whatsapp_template]

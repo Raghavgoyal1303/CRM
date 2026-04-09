@@ -1,5 +1,5 @@
 const { query, transaction } = require('../config/db');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 
 /**
  * List all campaigns for company
@@ -24,7 +24,7 @@ exports.getCampaigns = async (req, res) => {
 exports.createCampaign = async (req, res) => {
   const { company_id, id: userId } = req.user;
   const { name, description, daily_limit } = req.body;
-  const id = uuidv4();
+  const id = randomUUID();
   try {
     await query(
       'INSERT INTO outbound_campaigns (id, company_id, name, description, daily_limit, status, created_by) VALUES (?, ?, ?, ?, ?, "draft", ?)',
@@ -87,7 +87,7 @@ exports.updateCampaignStatus = async (req, res) => {
       // 2. Log activity
       await connection.query(
         'INSERT INTO activity_logs (id, company_id, user_id, action, details) VALUES (?, ?, ?, ?, ?)',
-        [uuidv4(), company_id, user_id, 'Campaign Status Shift', JSON.stringify({ campaign_id: id, new_status: status })]
+        [randomUUID(), company_id, user_id, 'Campaign Status Shift', JSON.stringify({ campaign_id: id, new_status: status })]
       );
     });
 
@@ -111,7 +111,7 @@ exports.uploadCampaignNumbers = async (req, res) => {
   try {
     await transaction(async (connection) => {
         for (const entry of numbers) {
-          const id = uuidv4();
+          const id = randomUUID();
           await connection.query(
             'INSERT INTO outbound_numbers (id, company_id, campaign_id, phone_number, last_call_status) VALUES (?, ?, ?, ?, "pending")',
             [id, company_id, campaign_id, entry.phone]
