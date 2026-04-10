@@ -34,7 +34,8 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://app.tricityverified.com',
   'https://tricityverified.com',
-  'https://www.tricityverified.com'
+  'https://www.tricityverified.com',
+  'https://crm-one-red.vercel.app'
 ];
 
 app.use(cors({

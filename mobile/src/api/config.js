@@ -13,7 +13,7 @@ const getBaseUrl = () => {
 
   // 2. Production URL (Fallback)
   // Replace with your real production domain when ready (e.g., https://api.tricityverified.com/api)
-  const PROD_URL = 'https://api.tricityverified.com/api';
+  const PROD_URL = 'https://crm-ytdj.onrender.com/api';
 
   // 3. Logic: If we have a dev host, use it. Otherwise, assume production.
   // Note: For physical devices in dev, the hostUri is essential.
