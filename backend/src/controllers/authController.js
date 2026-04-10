@@ -36,7 +36,7 @@ exports.login = async (req, res) => {
 
     // 3. Fetch company name for the UI context
     let company_name = 'Tricity Verified Platform';
-    if (user.role !== 'super_admin' && user.company_id) {
+    if (user.role !== 'superadmin' && user.company_id) {
       const { rows: compRows } = await db.query('SELECT name FROM companies WHERE id = ?', [user.company_id]);
       if (compRows.length > 0) company_name = compRows[0].name;
     }
@@ -82,7 +82,7 @@ exports.getMe = async (req, res) => {
 
     const user = rows[0];
     let company_name = 'Tricity Verified Platform';
-    if (user.role !== 'super_admin' && user.company_id) {
+    if (user.role !== 'superadmin' && user.company_id) {
       const { rows: compRows } = await db.query('SELECT name FROM companies WHERE id = ?', [user.company_id]);
       if (compRows.length > 0) company_name = compRows[0].name;
     }

@@ -40,7 +40,7 @@ const roleGuard = (roles) => {
  * Multi-tenant isolation guard
  */
 const tenantGuard = (req, res, next) => {
-  if (req.user.role !== 'super_admin' && !req.user.company_id) {
+  if (req.user.role !== 'superadmin' && !req.user.company_id) {
     return res.status(403).json({ message: 'Company identification failed' });
   }
   next();
