@@ -63,8 +63,12 @@ exports.login = async (req, res) => {
       token
     });
   } catch (err) {
-    console.error('Login error:', err);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error('❌ [Login Crash]:', err);
+    res.status(500).json({ 
+      message: 'Internal Server Error', 
+      diagnostic: err.message, 
+      stack: process.env.NODE_ENV === 'production' ? 'Redacted' : err.stack 
+    });
   }
 };
 
