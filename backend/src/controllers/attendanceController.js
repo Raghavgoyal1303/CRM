@@ -52,7 +52,7 @@ exports.clockOut = async (req, res) => {
         }
 
         await db.execute(
-            'UPDATE attendance SET clock_out = ?, status = "inactive" WHERE id = ?',
+            `UPDATE attendance SET clock_out = ?, status = 'inactive' WHERE id = ?`,
             [now, existing[0].id]
         );
 

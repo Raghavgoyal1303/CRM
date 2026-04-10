@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+﻿const bcrypt = require('bcrypt');
 
 const companies = [
   {
@@ -36,7 +36,7 @@ const employees = [
     id: 'super-admin-id',
     company_id: null,
     name: 'Super Admin',
-    email: 'you@leadflow.com',
+    email: 'you@Tricity Verified.com',
     password_hash: bcrypt.hashSync('super123', 10),
     role: 'superadmin',
     is_active: true,
@@ -93,3 +93,4 @@ module.exports = {
   call_logs,
   assignment_pointers
 };
+

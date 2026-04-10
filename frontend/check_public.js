@@ -1,7 +1,7 @@
-const puppeteer = require('puppeteer');
+﻿const puppeteer = require('puppeteer');
 
 (async () => {
-  console.log("Testing LeadFlow Public Homepage...");
+  console.log("Testing Tricity Verified Public Homepage...");
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   
@@ -31,3 +31,4 @@ const puppeteer = require('puppeteer');
   
   await browser.close();
 })();
+

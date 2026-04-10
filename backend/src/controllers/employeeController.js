@@ -20,7 +20,7 @@ exports.getEmployees = async (req, res) => {
           END as is_online
         FROM employees e
         LEFT JOIN attendance a ON e.id = a.user_id AND a.date = ?
-        WHERE e.company_id = ? AND e.role = "employee" AND e.deleted_at IS NULL 
+        WHERE e.company_id = ? AND e.role = 'employee' AND e.deleted_at IS NULL 
         ORDER BY e.created_at DESC
       `, [today, company_id]);
     res.json(rows);
@@ -46,7 +46,7 @@ exports.createEmployee = async (req, res) => {
 
       // 3. Insert new employee
       await connection.query(
-        'INSERT INTO employees (id, company_id, name, email, phone_number, password_hash, role, is_active, acefone_extension) VALUES (?, ?, ?, ?, ?, ?, "employee", 1, ?)',
+        `INSERT INTO employees (id, company_id, name, email, phone_number, password_hash, role, is_active, acefone_extension) VALUES (?, ?, ?, ?, ?, ?, 'employee', 1, ?)`,
         [id, company_id, name, email, phone_number, password_hash, acefone_extension]
       );
 
@@ -71,7 +71,7 @@ exports.deleteEmployee = async (req, res) => {
   const { id } = req.params;
   const { company_id } = req.user;
   try {
-    await query('UPDATE employees SET deleted_at = NOW() WHERE id = ? AND company_id = ? AND role = "employee"', [id, company_id]);
+    await query(`UPDATE employees SET deleted_at = NOW() WHERE id = ? AND company_id = ? AND role = 'employee'`, [id, company_id]);
     res.json({ message: 'Access revoked (Soft Delete)' });
   } catch (err) {
     res.status(500).json({ message: 'Internal Server Error' });
@@ -102,7 +102,7 @@ exports.updateEmployee = async (req, res) => {
     if (fields.length === 0) return res.status(400).json({ message: 'No fields provided for update' });
 
     params.push(id, company_id);
-    await query(`UPDATE employees SET ${fields.join(', ')} WHERE id = ? AND company_id = ? AND role = "employee"`, params);
+    await query(`UPDATE employees SET ${fields.join(', ')} WHERE id = ? AND company_id = ? AND role = 'employee'`, params);
     
     res.json({ message: 'Employee profile updated' });
   } catch (err) {
@@ -118,7 +118,7 @@ exports.resetPassword = async (req, res) => {
   try {
     const password_hash = await bcrypt.hash(newPassword, 10);
     await query(
-      'UPDATE employees SET password_hash = ? WHERE id = ? AND company_id = ? AND role = "employee"',
+      `UPDATE employees SET password_hash = ? WHERE id = ? AND company_id = ? AND role = 'employee'`,
       [password_hash, id, company_id]
     );
     res.json({ message: 'Passwords reset and hashed successful' });

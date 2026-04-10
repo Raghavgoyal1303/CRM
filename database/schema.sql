@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS leadflow_db;
-USE leadflow_db;
+﻿CREATE DATABASE IF NOT EXISTS Tricity Verified_db;
+USE Tricity Verified_db;
 
 -- COMPANIES (tenants)
 CREATE TABLE companies (
@@ -17,7 +17,7 @@ CREATE TABLE companies (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- EMPLOYEES (users — admin, employee, superadmin)
+-- EMPLOYEES (users â€” admin, employee, superadmin)
 CREATE TABLE employees (
   id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
   company_id CHAR(36),                          -- NULL for superadmin
@@ -100,4 +100,5 @@ CREATE TABLE assignment_pointers (
 
 -- SEED: Super Admin (you)
 INSERT INTO employees (id, name, email, password_hash, role, company_id)
-VALUES (UUID(), 'Super Admin', 'you@leadflow.com', '$2b$10$YourHashedPasswordHere', 'superadmin', NULL);
+VALUES (UUID(), 'Super Admin', 'you@Tricity Verified.com', '$2b$10$YourHashedPasswordHere', 'superadmin', NULL);
+

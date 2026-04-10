@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import {
   Building2,
@@ -61,7 +61,7 @@ const AdminLayout = ({ children }) => {
           <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200 group-hover:scale-110 transition-transform">
             <Infinity className="text-white" size={24} />
           </div>
-          <span className="text-xl font-heading font-black text-indigo-900 tracking-tight transition-all">LeadFlow</span>
+          <span className="text-xl font-heading font-black text-indigo-900 tracking-tight transition-all">Tricity Verified</span>
         </Link>
 
         <nav className="flex-1 px-4 mt-4 space-y-1 overflow-y-auto pb-8">
@@ -137,3 +137,4 @@ const AdminLayout = ({ children }) => {
 };
 
 export default AdminLayout;
+

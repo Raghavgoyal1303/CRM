@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Target, Users, History, BarChart3, ShieldAlert } from 'lucide-react';
 
 const GlobalStub = ({ title, desc, icon: Icon }) => (
@@ -20,6 +20,7 @@ const GlobalStub = ({ title, desc, icon: Icon }) => (
 );
 
 export const AllLeads = () => <GlobalStub title="Global Lead Repository" desc="Unified access to every lead captured across the entire platform. Audit quality, trace sources, and monitor conversion velocity at scale." icon={Target} />;
-export const AllEmployees = () => <GlobalStub title="Identity Console" desc="Manage every authenticated operative on the LeadFlow network. Audit session history, activity logs, and performance metrics." icon={Users} />;
+export const AllEmployees = () => <GlobalStub title="Identity Console" desc="Manage every authenticated operative on the Tricity Verified network. Audit session history, activity logs, and performance metrics." icon={Users} />;
 export const CallLogs = () => <GlobalStub title="Interception Logs" desc="Complete history of all voice data processed through Exotel gateways. Review recording quality and routing efficiency." icon={History} />;
-export const Analytics = () => <GlobalStub title="Platform Intelligence" desc="Growth trends, MRR velocity, and retention metrics. High-level business intelligence for the LeadFlow ecosystem." icon={BarChart3} />;
+export const Analytics = () => <GlobalStub title="Platform Intelligence" desc="Growth trends, MRR velocity, and retention metrics. High-level business intelligence for the Tricity Verified ecosystem." icon={BarChart3} />;
+

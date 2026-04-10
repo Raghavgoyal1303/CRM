@@ -1,4 +1,4 @@
-require('dotenv').config();
+﻿require('dotenv').config();
 
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
@@ -10,7 +10,7 @@ module.exports = {
       host: process.env.DB_HOST || '127.0.0.1',
       user: process.env.DB_USER || 'root',
       password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME || 'leadflow_db',
+      database: process.env.DB_NAME || 'Tricity Verified_db',
       port: process.env.DB_PORT || 3306
     },
     migrations: {
@@ -33,3 +33,4 @@ module.exports = {
     }
   }
 };
+

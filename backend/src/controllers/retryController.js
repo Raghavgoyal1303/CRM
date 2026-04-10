@@ -23,7 +23,7 @@ exports.processManualRetry = async (req, res) => {
   try {
     // In a production environment, this would call the dialer service immediately
     await db.query(
-      'UPDATE retry_queue SET status = "retrying", retry_count = retry_count + 1 WHERE id = ? AND company_id = ?',
+      `UPDATE retry_queue SET status = 'retrying', retry_count = retry_count + 1 WHERE id = ? AND company_id = ?`,
       [id, company_id]
     );
     res.json({ success: true, message: 'Retry operation initiated' });

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { Bell, Search, User, ChevronRight } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
@@ -17,7 +17,7 @@ const Topbar = () => {
       {/* Left: Title & Breadcrumbs */}
       <div className="flex flex-col">
         <div className="flex items-center gap-2 text-xs text-text-secondary uppercase tracking-widest font-semibold mb-0.5">
-          <span>LeadFlow</span>
+          <span>Tricity Verified</span>
           <ChevronRight size={12} />
           <span className="text-primary">{capitalizedTitle}</span>
         </div>
@@ -55,3 +55,4 @@ const Topbar = () => {
 };
 
 export default Topbar;
+

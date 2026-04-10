@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { 
   FileSearch, 
   Search, 
@@ -48,7 +48,7 @@ const AuditLog = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-heading font-black text-indigo-900 tracking-tight">Audit Log</h1>
-          <p className="text-gray-500 font-medium mt-1">Full transparency of every action taken within LeadFlow</p>
+          <p className="text-gray-500 font-medium mt-1">Full transparency of every action taken within Tricity Verified</p>
         </div>
         <button className="bg-white text-indigo-900 px-6 py-3 rounded-2xl flex items-center gap-2 font-black uppercase tracking-widest text-[10px] shadow-sm border border-gray-100 hover:shadow-lg transition-all">
           <Download size={18} /> Export Full History
@@ -152,3 +152,4 @@ const AuditLog = () => {
 };
 
 export default AuditLog;
+

@@ -31,7 +31,7 @@ exports.handleIvrLead = async (req, res) => {
       } else {
         // 2. Create new lead
         await connection.query(
-          'INSERT INTO leads (id, company_id, name, phone_number, status, source) VALUES (?, ?, ?, ?, "new", ?)',
+          `INSERT INTO leads (id, company_id, name, phone_number, status, source) VALUES (?, ?, ?, ?, 'new', ?)`,
           [leadId, companyId, name || 'IVR Lead', phone, source || 'ivr']
         );
 
@@ -75,7 +75,7 @@ exports.handleExotelWebhook = async (req, res) => {
   try {
     const logId = randomUUID();
     await query(
-      'INSERT INTO call_logs (id, company_id, phone_number, call_status, direction) VALUES (?, ?, ?, ?, "inbound")',
+      `INSERT INTO call_logs (id, company_id, phone_number, call_status, direction) VALUES (?, ?, ?, ?, 'inbound')`,
       [logId, companyId, CallFrom, CallStatus === 'completed' ? 'answered' : 'missed']
     );
 
@@ -87,7 +87,7 @@ exports.handleExotelWebhook = async (req, res) => {
     if (leads.length === 0) {
       const leadId = randomUUID();
       await query(
-        'INSERT INTO leads (id, company_id, name, phone_number, status, source) VALUES (?, ?, ?, ?, "new", "call")',
+        `INSERT INTO leads (id, company_id, name, phone_number, status, source) VALUES (?, ?, ?, ?, 'new', 'call')`,
         [leadId, companyId, 'Auto-Captured Lead', CallFrom]
       );
     }

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { 
   StyleSheet, 
   View, 
@@ -52,7 +52,7 @@ const ProfileScreen = ({ navigation }) => {
           </View>
           <Text style={styles.userName}>{user?.name || 'Operative'}</Text>
           <Text style={styles.userRole}>{user?.role?.toUpperCase() || 'SALES REPRESENTATIVE'}</Text>
-          <Text style={styles.userEmail}>{user?.email || 'authenticated@leadflow.com'}</Text>
+          <Text style={styles.userEmail}>{user?.email || 'authenticated@Tricity Verified.com'}</Text>
         </View>
 
         <View style={styles.settingsEnclosure}>
@@ -118,3 +118,4 @@ const styles = StyleSheet.create({
 });
 
 export default ProfileScreen;
+

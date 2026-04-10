@@ -47,12 +47,12 @@ exports.convertToLead = async (req, res) => {
     const leadId = randomUUID();
     
     await db.query(
-      'INSERT INTO leads (id, company_id, name, phone_number, status, source) VALUES (?, ?, ?, ?, "new", "campaign")',
+      `INSERT INTO leads (id, company_id, name, phone_number, status, source) VALUES (?, ?, ?, ?, 'new', 'campaign')`,
       [leadId, company_id, prospect.name, prospect.phone_number]
     );
     
     await db.query(
-      'UPDATE outbound_leads SET converted_to_lead = 1, status = "converted" WHERE id = ?',
+      `UPDATE outbound_leads SET converted_to_lead = 1, status = 'converted' WHERE id = ?`,
       [id]
     );
     
@@ -68,7 +68,7 @@ exports.setReminder = async (req, res) => {
   const { company_id } = req.user;
   try {
     await db.query(
-      'UPDATE outbound_leads SET site_visit_date = ?, status = "reminder_set" WHERE id = ? AND company_id = ?',
+      `UPDATE outbound_leads SET site_visit_date = ?, status = 'reminder_set' WHERE id = ? AND company_id = ?`,
       [reminder_date, id, company_id]
     );
     res.json({ success: true, message: 'Engagement reminder scheduled' });

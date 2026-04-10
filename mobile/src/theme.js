@@ -1,5 +1,5 @@
 /**
- * LeadFlow CRM — Mobile Build Protocol Design System
+ * Tricity Verified CRM â€” Mobile Build Protocol Design System
  * 
  * Synchronized with the reference app skeleton + website skin.
  * Focuses on Indigo headers (#4F46E5) and 16px card radii.
@@ -37,8 +37,8 @@ export const theme = {
     card: {
       shadowColor: '#1A1A2E',
       shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.08,
-      shadowRadius: 10,
+      shadowOpacity: 0.04,
+      shadowRadius: 8,
       elevation: 4,
     },
     premium: {
@@ -72,3 +72,4 @@ export const theme = {
     xl: 32,
   }
 };
+

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
@@ -44,7 +44,7 @@ const HomePage = () => {
             <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
               <Square className="text-white fill-white" size={20} />
             </div>
-            <span className="font-heading font-black text-2xl tracking-tight text-primary">LeadFlow</span>
+            <span className="font-heading font-black text-2xl tracking-tight text-primary">Tricity Verified</span>
           </Link>
 
           {/* Desktop Nav */}
@@ -127,7 +127,7 @@ const HomePage = () => {
               Turn Every Call Into <br /> <span className="text-primary">a Closed Deal</span>
             </h1>
             <p className="text-[#6B7280] text-lg md:text-xl max-w-[560px] mx-auto leading-relaxed mb-10">
-              LeadFlow automatically captures leads from your Exotel calls, assigns them to your team, and tracks every follow-up — so no lead ever slips through.
+              Tricity Verified automatically captures leads from your Exotel calls, assigns them to your team, and tracks every follow-up â€” so no lead ever slips through.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
               <Link to="/login" className="w-full sm:w-auto bg-primary text-white px-8 py-4 rounded-[12px] text-lg font-bold shadow-xl shadow-primary/20 hover:-translate-y-1 transition-all">
@@ -212,7 +212,7 @@ const HomePage = () => {
               <div className="w-8 h-8 rounded-full border-2 border-primary flex items-center justify-center text-primary animate-bounce">
                 <ArrowRight size={18} className="rotate-90" />
               </div>
-              <div className="text-primary font-black uppercase tracking-[0.3em] text-xs">LeadFlow fixes all of this</div>
+              <div className="text-primary font-black uppercase tracking-[0.3em] text-xs">Tricity Verified fixes all of this</div>
             </div>
           </motion.div>
         </section>
@@ -226,10 +226,10 @@ const HomePage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { icon: PhoneIncoming, title: 'Auto Lead Capture', desc: 'Every Exotel call instantly becomes a lead — no manual entry', color: 'bg-indigo-50 text-indigo-600 border-indigo-100' },
+              { icon: PhoneIncoming, title: 'Auto Lead Capture', desc: 'Every Exotel call instantly becomes a lead â€” no manual entry', color: 'bg-indigo-50 text-indigo-600 border-indigo-100' },
               { icon: Users, title: 'Smart Assignment', desc: 'Round-robin auto-assigns leads to available employees', color: 'bg-emerald-50 text-emerald-600 border-emerald-100' },
               { icon: Zap, title: '1-Tap Status Updates', desc: 'Employees update lead status in one tap, no complicated forms', color: 'bg-amber-50 text-amber-600 border-amber-100' },
-              { icon: ShieldAlert, title: 'Missed Call Alerts', desc: 'Never miss a lead — instant notifications for missed calls', color: 'bg-rose-50 text-rose-600 border-rose-100' },
+              { icon: ShieldAlert, title: 'Missed Call Alerts', desc: 'Never miss a lead â€” instant notifications for missed calls', color: 'bg-rose-50 text-rose-600 border-rose-100' },
               { icon: History, title: 'Full Call Timeline', desc: 'See every call, note, and recording per lead in one place', color: 'bg-purple-50 text-purple-600 border-purple-100' },
               { icon: TrendingUp, title: 'Team Analytics', desc: 'Track conversion rates and performance for every employee', color: 'bg-blue-50 text-blue-600 border-blue-100' },
             ].map((f, i) => (
@@ -262,7 +262,7 @@ const HomePage = () => {
             <div className="hidden md:block absolute top-12 left-20 right-20 border-t-2 border-dashed border-[#F0EEF8] z-0" />
 
             {[
-              { n: '01', title: 'Connect Exotel', desc: 'Point your webhook at LeadFlow, takes less than 2 minutes.' },
+              { n: '01', title: 'Connect Exotel', desc: 'Point your webhook at Tricity Verified, takes less than 2 minutes.' },
               { n: '02', title: 'Add Your Team', desc: 'Invite employees, they get login access instantly.' },
               { n: '03', title: 'Watch Leads Flow', desc: 'Every call auto-captured, assigned, and tracked.' },
             ].map((s, i) => (
@@ -344,7 +344,7 @@ const HomePage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { name: 'Sameer Desai', company: 'Desai Properties', text: 'LeadFlow has been a game-changer for our sales team. We were losing at least 10 leads a week due to unrecorded calls. Now every call is a lead.', initials: 'SD' },
+              { name: 'Sameer Desai', company: 'Desai Properties', text: 'Tricity Verified has been a game-changer for our sales team. We were losing at least 10 leads a week due to unrecorded calls. Now every call is a lead.', initials: 'SD' },
               { name: 'Anjali Gupta', company: 'UrbanNest Realty', text: 'The round-robin assignment is incredibly fair and efficient. My agents are more motivated because the system tracks their performance objectively.', initials: 'AG' },
               { name: 'Karan Mehra', company: 'SkyHigh Estates', text: 'Simplest CRM I have ever used. Setup took literally 5 minutes and the employee app is so intuitive that no one needed training.', initials: 'KM' },
             ].map((t, i) => (
@@ -383,7 +383,7 @@ const HomePage = () => {
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-400/20 rounded-full blur-[80px] -ml-32 -mb-32" />
 
             <h2 className="text-4xl md:text-6xl font-heading font-black mb-6 leading-tight relative z-10">Ready to never miss <br /> a lead again?</h2>
-            <p className="text-[#C7D2FE] text-lg md:text-xl font-medium mb-12 relative z-10">Join growing real estate teams already using LeadFlow</p>
+            <p className="text-[#C7D2FE] text-lg md:text-xl font-medium mb-12 relative z-10">Join growing real estate teams already using Tricity Verified</p>
 
             <Link to="/login" className="inline-flex items-center justify-center bg-white text-primary px-10 py-5 rounded-[20px] text-xl font-black shadow-xl hover:-translate-y-1 transition-all relative z-10">
               Start Your Free Trial
@@ -400,9 +400,9 @@ const HomePage = () => {
                   <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white shadow-md">
                     <Square className="fill-white" size={16} />
                   </div>
-                  <span className="font-heading font-black text-xl tracking-tight text-primary">LeadFlow</span>
+                  <span className="font-heading font-black text-xl tracking-tight text-primary">Tricity Verified</span>
                 </div>
-                <p className="text-[#6B7280] text-sm font-medium">© 2025 LeadFlow. All rights reserved.</p>
+                <p className="text-[#6B7280] text-sm font-medium">Â© 2025 Tricity Verified. All rights reserved.</p>
               </div>
 
               <div className="text-primary font-black uppercase tracking-[0.2em] text-[10px]">
@@ -417,7 +417,7 @@ const HomePage = () => {
             </div>
 
             <div className="text-center md:text-left text-[10px] text-gray-300 font-bold uppercase tracking-widest border-t border-gray-50 pt-8">
-              LeadFlow Multi-Tenant CRM Engine v1.0.4-stable
+              Tricity Verified Multi-Tenant CRM Engine v1.0.4-stable
             </div>
           </div>
         </footer>
@@ -427,3 +427,4 @@ const HomePage = () => {
 };
 
 export default HomePage;
+

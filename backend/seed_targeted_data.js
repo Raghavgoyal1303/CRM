@@ -1,4 +1,4 @@
-const mysql = require('mysql2/promise');
+﻿const mysql = require('mysql2/promise');
 const { v4: uuidv4 } = require('uuid');
 require('dotenv').config();
 
@@ -6,17 +6,17 @@ const pool = mysql.createPool({
   host: process.env.DB_HOST || '127.0.0.1',
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME || 'leadflow_db',
+  database: process.env.DB_NAME || 'Tricity Verified_db',
 });
 
 async function seed() {
-  console.log('🚀 Final Seeding Rescue for Raghav Goyal (LeadFlow HQ)...');
+  console.log('ðŸš€ Final Seeding Rescue for Raghav Goyal (Tricity Verified HQ)...');
   try {
     // 1. Force the correct IDs we verified
     const companyId = 'hq_company_001';
     const staffId = 'owner_001';
     
-    console.log(`📡 Correct Context -> Company: ${companyId} | Staff: ${staffId}`);
+    console.log(`ðŸ“¡ Correct Context -> Company: ${companyId} | Staff: ${staffId}`);
 
     const leadNames = [
       'John Smith', 'Sarah Jenkins', 'Michael Ross', 'Rachel Zane', 'Harvey Specter',
@@ -28,7 +28,7 @@ async function seed() {
     const statuses = ['new', 'interested', 'site_visit', 'closed', 'lost'];
     const sources = ['Google Ads', 'Facebook', 'LinkedIn', 'Referral', 'Organic'];
 
-    console.log(`📝 Creating ${leadNames.length} premium leads...`);
+    console.log(`ðŸ“ Creating ${leadNames.length} premium leads...`);
     for (let name of leadNames) {
       const id = uuidv4();
       const status = statuses[Math.floor(Math.random() * statuses.length)];
@@ -58,11 +58,12 @@ async function seed() {
       }
     }
 
-    console.log('✅ SEEDING COMPLETE! Refresh Website & Mobile now.');
+    console.log('âœ… SEEDING COMPLETE! Refresh Website & Mobile now.');
     process.exit(0);
   } catch (error) {
-    console.error('❌ Seeding Failed:', error.message);
+    console.error('âŒ Seeding Failed:', error.message);
     process.exit(1);
   }
 }
 seed();
+

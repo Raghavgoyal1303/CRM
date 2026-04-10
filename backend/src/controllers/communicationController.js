@@ -33,9 +33,9 @@ exports.sendManualSMS = async (req, res) => {
   const { phone_number, message_text, lead_id } = req.body;
   const id = randomUUID();
   try {
-    // LeadFlow logic: Log the dispatch first
+    // Tricity Verified logic: Log the dispatch first
     await db.query(
-      'INSERT INTO communication_logs (id, company_id, lead_id, phone_number, channel, message_text, status, triggered_by) VALUES (?, ?, ?, ?, "sms", ?, "sent", "manual")',
+      `INSERT INTO communication_logs (id, company_id, lead_id, phone_number, channel, message_text, status, triggered_by) VALUES (?, ?, ?, ?, 'sms', ?, 'sent', 'manual')`,
       [id, company_id, lead_id, phone_number, message_text]
     );
     res.status(201).json({ id, message: 'SMS dispatch record captured' });
@@ -51,7 +51,7 @@ exports.sendManualWhatsApp = async (req, res) => {
   try {
     // WhatsApp lead logic: Log with brochure support
     await db.query(
-      'INSERT INTO communication_logs (id, company_id, lead_id, phone_number, channel, message_text, status, triggered_by) VALUES (?, ?, ?, ?, "whatsapp", ?, "sent", "manual")',
+      `INSERT INTO communication_logs (id, company_id, lead_id, phone_number, channel, message_text, status, triggered_by) VALUES (?, ?, ?, ?, 'whatsapp', ?, 'sent', 'manual')`,
       [id, company_id, lead_id, phone_number, message_text]
     );
     res.status(201).json({ id, message: 'WhatsApp dispatch record captured' });
@@ -59,3 +59,4 @@ exports.sendManualWhatsApp = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+

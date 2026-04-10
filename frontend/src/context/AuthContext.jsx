@@ -52,16 +52,16 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initAuth = async () => {
       try {
-        if (import.meta.env.DEV) console.log('🔐 [Auth] Verifying session with server...');
+        if (import.meta.env.DEV) console.log('ðŸ” [Auth] Verifying session with server...');
         const response = await authApi.getMe();
         // The server returns the user directly in response.data
         if (response.data && (response.data.id || response.data.user)) {
           setUser(response.data.user || response.data);
         }
       } catch (err) {
-        if (import.meta.env.DEV) console.log('🔓 [Auth] No active session found or server offline.');
+        if (import.meta.env.DEV) console.log('ðŸ”“ [Auth] No active session found or server offline.');
         setUser(null);
-        localStorage.removeItem('leadflow_user');
+        localStorage.removeItem('tricity_user');
       } finally {
         setLoading(false);
       }
@@ -75,10 +75,10 @@ export const AuthProvider = ({ children }) => {
       const response = await authApi.login({ email, password });
       const { user: userData } = response.data;
       setUser(userData);
-      localStorage.setItem('leadflow_user', JSON.stringify(userData));
+      localStorage.setItem('tricity_user', JSON.stringify(userData));
       return userData;
     } catch (err) {
-      console.error('❌ [Auth] Single Sign-On Failed:', err.response?.data?.message || err.message);
+      console.error('âŒ [Auth] Single Sign-On Failed:', err.response?.data?.message || err.message);
       throw err;
     } finally {
       setLoading(false);
@@ -89,10 +89,10 @@ export const AuthProvider = ({ children }) => {
     try {
       await authApi.logout();
     } catch (e) {
-      console.warn('⚠️ [Auth] Backend logout failed, clearing local state anyway');
+      console.warn('âš ï¸ [Auth] Backend logout failed, clearing local state anyway');
     }
     setUser(null);
-    localStorage.removeItem('leadflow_user');
+    localStorage.removeItem('tricity_user');
     setShowIdleWarning(false);
   };
 
@@ -157,3 +157,4 @@ export const useAuth = () => {
   }
   return context;
 };
+

@@ -1,4 +1,4 @@
-# Staging Deployment Guide (Phase 2)
+﻿# Staging Deployment Guide (Phase 2)
 
 This guide outlines how to set up your staging environment on **Railway.app**, which is the recommended platform for your production transition.
 
@@ -11,13 +11,13 @@ This guide outlines how to set up your staging environment on **Railway.app**, w
 
 ## Step 1: Initialize Railway Project
 
-1.  Click **"New Project"** → **"Deploy from GitHub repo"**.
-2.  Select your `LeadFlow-CRM` repository.
+1.  Click **"New Project"** â†’ **"Deploy from GitHub repo"**.
+2.  Select your `Tricity Verified-CRM` repository.
 3.  Railway will automatically detect the `backend` and `frontend` folders (if nested, you may need to add them as separate services).
 
 ## Step 2: Set Up Database (MySQL)
 
-1.  On your Railway dashboard, click **"New"** → **"Database"** → **"Add MySQL"**.
+1.  On your Railway dashboard, click **"New"** â†’ **"Database"** â†’ **"Add MySQL"**.
 2.  Once created, click the MySQL service, go to **"Connect"**, and copy the connection variables.
 
 ## Step 3: Configure Backend Variables
@@ -59,3 +59,4 @@ npx knex migrate:latest
 
 > [!TIP]
 > **Uptime Monitoring**: Once your staging backend is live, go to [UptimeRobot.com](https://uptimerobot.com/) and create a "HTTP(s) Monitor" pointing to your `/health` endpoint.
+

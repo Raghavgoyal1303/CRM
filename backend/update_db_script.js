@@ -1,4 +1,4 @@
-require('dotenv').config({ path: './backend/.env' });
+﻿require('dotenv').config({ path: './backend/.env' });
 const mysql = require('mysql2/promise');
 
 async function run() {
@@ -6,16 +6,16 @@ async function run() {
     host: process.env.DB_HOST || 'localhost',
     user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || 'password',
-    database: process.env.DB_NAME || 'leadflow_db',
+    database: process.env.DB_NAME || 'Tricity Verified_db',
     port: process.env.DB_PORT || 3306,
   });
 
   try {
     const conn = await pool.getConnection();
-    console.log('✅ Connected to DB');
+    console.log('âœ… Connected to DB');
     
     await conn.query('ALTER TABLE employees ADD COLUMN IF NOT EXISTS phone_number VARCHAR(20)');
-    console.log('✅ phone_number column checked');
+    console.log('âœ… phone_number column checked');
     
     await conn.query(`
       CREATE TABLE IF NOT EXISTS otp_tokens (
@@ -28,15 +28,16 @@ async function run() {
         FOREIGN KEY (employee_id) REFERENCES employees(id)
       )
     `);
-    console.log('✅ otp_tokens table checked');
+    console.log('âœ… otp_tokens table checked');
     
     conn.release();
-    console.log('🚀 DB Schema Sync Complete');
+    console.log('ðŸš€ DB Schema Sync Complete');
     process.exit(0);
   } catch (err) {
-    console.error('❌ DB Error:', err.message);
+    console.error('âŒ DB Error:', err.message);
     process.exit(1);
   }
 }
 
 run();
+

@@ -25,9 +25,9 @@ exports.getDashboardStats = async (req, res) => {
     }
 
     const totalLeads = await fetchMetric(`SELECT COUNT(*) as count FROM leads ${leadFilter}`, params);
-    const contactedLeads = await fetchMetric(`SELECT COUNT(*) as count FROM leads ${leadFilter} AND status = "contacted"`, params);
-    const interestedLeads = await fetchMetric(`SELECT COUNT(*) as count FROM leads ${leadFilter} AND status = "interested"`, params);
-    const closedLeads = await fetchMetric(`SELECT COUNT(*) as count FROM leads ${leadFilter} AND status = "closed"`, params);
+    const contactedLeads = await fetchMetric(`SELECT COUNT(*) as count FROM leads ${leadFilter} AND status = 'contacted'`, params);
+    const interestedLeads = await fetchMetric(`SELECT COUNT(*) as count FROM leads ${leadFilter} AND status = 'interested'`, params);
+    const closedLeads = await fetchMetric(`SELECT COUNT(*) as count FROM leads ${leadFilter} AND status = 'closed'`, params);
     
     // Status breakdown
     const { rows: statusRows } = await db.query(

@@ -27,7 +27,7 @@ exports.createCampaign = async (req, res) => {
   const id = randomUUID();
   try {
     await query(
-      'INSERT INTO outbound_campaigns (id, company_id, name, description, daily_limit, status, created_by) VALUES (?, ?, ?, ?, ?, "draft", ?)',
+      `INSERT INTO outbound_campaigns (id, company_id, name, description, daily_limit, status, created_by) VALUES (?, ?, ?, ?, ?, 'draft', ?)`,
       [id, company_id, name, description, daily_limit || 1000, userId]
     );
     res.status(201).json({ id, name, status: 'draft' });
@@ -113,7 +113,7 @@ exports.uploadCampaignNumbers = async (req, res) => {
         for (const entry of numbers) {
           const id = randomUUID();
           await connection.query(
-            'INSERT INTO outbound_numbers (id, company_id, campaign_id, phone_number, last_call_status) VALUES (?, ?, ?, ?, "pending")',
+            `INSERT INTO outbound_numbers (id, company_id, campaign_id, phone_number, last_call_status) VALUES (?, ?, ?, ?, 'pending')`,
             [id, company_id, campaign_id, entry.phone]
           );
         }

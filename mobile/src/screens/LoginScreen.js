@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -36,7 +36,7 @@ const LoginScreen = () => {
         <View style={styles.logoRing}>
           <ShieldCheck size={40} color="#fff" strokeWidth={2.5} />
         </View>
-        <Text style={styles.appName}>LeadFlow CRM</Text>
+        <Text style={styles.appName}>Tricity Verified CRM</Text>
         <Text style={styles.appTagline}>Enterprise Intelligence Protocol</Text>
       </View>
 
@@ -143,3 +143,4 @@ const styles = StyleSheet.create({
 });
 
 export default LoginScreen;
+

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Lock, Mail, AlertCircle, Eye, EyeOff, Square } from 'lucide-react';
@@ -39,7 +39,7 @@ const Login = () => {
           <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-white mx-auto mb-4 shadow-lg shadow-primary/20">
             <Square className="fill-white" size={24} />
           </div>
-          <h1 className="text-2xl font-heading font-bold text-text-primary mb-1">LeadFlow CRM</h1>
+          <h1 className="text-2xl font-heading font-bold text-text-primary mb-1">Tricity Verified CRM</h1>
           <p className="text-text-secondary text-sm">Sign in to your workspace</p>
         </div>
 
@@ -78,7 +78,7 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="input-field pl-12 pr-12 h-11"
-                placeholder="••••••••"
+                placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                 required
               />
               <button
@@ -112,7 +112,7 @@ const Login = () => {
             </div>
             <div className="space-y-1.5">
               <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Enter OTP</label>
-              <input disabled className="input-field h-10" placeholder="••••••" />
+              <input disabled className="input-field h-10" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢" />
             </div>
             <button disabled className="w-full py-3 bg-gray-100 text-gray-400 rounded-xl text-xs font-black uppercase tracking-widest">Login with OTP</button>
             <p className="text-[10px] text-center text-primary font-bold animate-pulse">OTP login coming soon in v1.1</p>
@@ -130,3 +130,4 @@ const Login = () => {
 };
 
 export default Login;
+

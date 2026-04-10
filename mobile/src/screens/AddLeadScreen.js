@@ -53,7 +53,9 @@ const AddLeadScreen = ({ navigation }) => {
 
     setLoading(true);
     try {
-      await leadsApi.createLead(formData);
+      // Map 'phone' to 'phone_number' for the backend
+      const payload = { ...formData, phone_number: formData.phone };
+      await leadsApi.createLead(payload);
       Alert.alert('Success', 'Lead created successfully!', [
         { text: 'OK', onPress: () => navigation.goBack() }
       ]);

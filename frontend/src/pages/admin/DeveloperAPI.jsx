@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { 
   Code2, 
   Plus, 
@@ -298,8 +298,8 @@ const DeveloperAPI = () => {
                          className="w-full bg-gray-50 border-gray-100 rounded-2xl h-14 px-4 focus:ring-2 focus:ring-indigo-600 text-sm font-bold appearance-none"
                          onChange={(e) => setFormData({...formData, environment: e.target.value})}
                        >
-                          <option value="live">🚀 Live Production</option>
-                          <option value="test">🧪 Test/Sandbox</option>
+                          <option value="live">ðŸš€ Live Production</option>
+                          <option value="test">ðŸ§ª Test/Sandbox</option>
                        </select>
                     </div>
                     <div>
@@ -361,7 +361,7 @@ const DeveloperAPI = () => {
               <div className="p-10 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white z-10">
                  <div>
                     <h3 className="text-2xl font-black text-indigo-900 italic tracking-tight">Lead Ingestion Specifications</h3>
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">LeadFlow API Version 1.0.4</p>
+                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">Tricity Verified API Version 1.0.4</p>
                  </div>
                  <button onClick={() => setShowDocs(false)} className="w-12 h-12 bg-gray-50 text-gray-400 rounded-2xl flex items-center justify-center hover:text-indigo-900 transition-colors">
                     <X size={24} />
@@ -445,3 +445,4 @@ const DeveloperAPI = () => {
 };
 
 export default DeveloperAPI;
+

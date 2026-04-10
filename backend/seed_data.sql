@@ -1,13 +1,13 @@
--- LeadFlow CRM Sample Data Seed Script (SCHEMA FIXED)
+﻿-- Tricity Verified CRM Sample Data Seed Script (SCHEMA FIXED)
 -- ------------------------------------------------------
 -- Instructions: 
 -- 1. Open MySQL Workbench.
--- 2. Select your 'leadflow_db' database.
+-- 2. Select your 'Tricity Verified_db' database.
 -- 3. Copy/Paste these commands into a new SQL query tab.
 -- 4. Execute (Zap icon).
 -- ------------------------------------------------------
 
-USE leadflow_db;
+USE Tricity Verified_db;
 
 -- Clear existing data (CAUTION: Clean slate for testing)
 SET FOREIGN_KEY_CHECKS = 0;
@@ -25,13 +25,13 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- 1. CREATE A TEST COMPANY
 -- Column Fixed: owner_name, email, subscription_status
 INSERT INTO companies (id, name, owner_name, email, phone, subscription_status, created_at)
-VALUES ('hq_company_001', 'LeadFlow HQ', 'Raghav Goyal', 'owner@leadflow.com', '9999999999', 'active', NOW());
+VALUES ('hq_company_001', 'Tricity Verified HQ', 'Raghav Goyal', 'owner@Tricity Verified.com', '9999999999', 'active', NOW());
 
 -- 2. CREATE OWNER AND EMPLOYEE ACCOUNTS
 INSERT INTO employees (id, company_id, name, email, password_hash, role, is_active, created_at)
 VALUES 
-('owner_001', 'hq_company_001', 'Raghav Goyal (Owner)', 'owner@leadflow.com', '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgNI9Xf99W8p7QfL1f.k5Q8nC9K.', 'admin', 1, NOW()),
-('emp_001', 'hq_company_001', 'John Staff (Employee)', 'employee@leadflow.com', '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgNI9Xf99W8p7QfL1f.k5Q8nC9K.', 'employee', 1, NOW());
+('owner_001', 'hq_company_001', 'Raghav Goyal (Owner)', 'owner@Tricity Verified.com', '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgNI9Xf99W8p7QfL1f.k5Q8nC9K.', 'admin', 1, NOW()),
+('emp_001', 'hq_company_001', 'John Staff (Employee)', 'employee@Tricity Verified.com', '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgNI9Xf99W8p7QfL1f.k5Q8nC9K.', 'employee', 1, NOW());
 
 -- 3. SAMPLE LEADS
 -- Note: Leads table does not have an 'email' column based on schema check.
@@ -70,5 +70,6 @@ VALUES
 
 -- Final Verification Note:
 -- You can now login with:
--- Admin: owner@leadflow.com / admin123
--- Staff: employee@leadflow.com / admin123
+-- Admin: owner@Tricity Verified.com / admin123
+-- Staff: employee@Tricity Verified.com / admin123
+

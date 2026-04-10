@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Settings, Shield, Lock, Bell, Database, Save, AlertTriangle } from 'lucide-react';
 
 const SuperSettings = () => {
@@ -50,11 +50,11 @@ const SuperSettings = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-[11px] font-black uppercase tracking-widest text-[#6B7280]">Platform Name</label>
-                    <input className="input-field" defaultValue="LeadFlow CRM Engine" />
+                    <input className="input-field" defaultValue="Tricity Verified CRM Engine" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-[11px] font-black uppercase tracking-widest text-[#6B7280]">Support Email</label>
-                    <input className="input-field" defaultValue="support@leadflow.io" />
+                    <input className="input-field" defaultValue="support@Tricity Verified.io" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-[11px] font-black uppercase tracking-widest text-[#6B7280]">Default Trial Days</label>
@@ -122,3 +122,4 @@ const SuperSettings = () => {
 };
 
 export default SuperSettings;
+

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
@@ -48,7 +48,7 @@ const EmployeeLayout = ({ children }) => {
             <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200 group-hover:scale-110 transition-transform">
               <Infinity className="text-white" size={24} />
             </div>
-            <span className="text-xl font-heading font-black text-indigo-900 tracking-tight">LeadFlow</span>
+            <span className="text-xl font-heading font-black text-indigo-900 tracking-tight">Tricity Verified</span>
           </div>
         </Link>
 
@@ -99,7 +99,7 @@ const EmployeeLayout = ({ children }) => {
         <header className="h-20 bg-[#F9F7F4]/80 backdrop-blur-md flex items-center justify-between px-6 lg:px-12 flex-shrink-0 z-40">
           <div className="lg:block">
             <h1 className="text-xl font-heading font-black text-indigo-900 tracking-tight">
-              Good morning, {user?.name?.split(' ')[0] || 'Sales Rep'} 👋
+              Good morning, {user?.name?.split(' ')[0] || 'Sales Rep'} ðŸ‘‹
             </h1>
             <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">{today}</p>
           </div>
@@ -146,3 +146,4 @@ const EmployeeLayout = ({ children }) => {
 };
 
 export default EmployeeLayout;
+

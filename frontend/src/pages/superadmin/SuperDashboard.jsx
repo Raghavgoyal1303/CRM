@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Building2, Users, Target, DollarSign, TrendingUp, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { superApi } from '../../api';
@@ -48,7 +48,7 @@ const SuperDashboard = () => {
     <div className="space-y-8">
       {/* Header */}
       <header>
-        <div className="text-xs font-black text-indigo-400 uppercase tracking-[0.3em] mb-1">LeadFlow Control Module</div>
+        <div className="text-xs font-black text-indigo-400 uppercase tracking-[0.3em] mb-1">Tricity Verified Control Module</div>
         <h1 className="text-3xl font-heading font-black text-indigo-900 tracking-tight">Platform Master Overview</h1>
       </header>
 
@@ -148,3 +148,4 @@ const SuperDashboard = () => {
 };
 
 export default SuperDashboard;
+

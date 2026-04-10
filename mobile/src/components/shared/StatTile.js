@@ -30,10 +30,10 @@ const styles = StyleSheet.create({
   tile: {
     backgroundColor: '#fff',
     borderRadius: 16,
-    padding: 16,
-    borderWidth: 0,
-    borderColor: 'transparent',
-    marginBottom: 12,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    marginBottom: 16,
     ...theme.shadows.card,
   },
   halfWidth: {
@@ -45,18 +45,18 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    marginBottom: 12,
+    gap: 12,
+    marginBottom: 16,
   },
   iconBox: {
-    width: 36,
-    height: 36,
+    width: 40,
+    height: 40,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
   },
   title: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '700',
     color: theme.colors.textSecondary,
     fontFamily: theme.fonts.heading,

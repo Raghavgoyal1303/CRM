@@ -9,8 +9,8 @@ exports.getGlobalStats = async (req, res) => {
   try {
     const { rows: companies } = await db.query('SELECT COUNT(*) as count FROM companies');
     const { rows: leads } = await db.query('SELECT COUNT(*) as count FROM leads');
-    const { rows: employees } = await db.query('SELECT COUNT(*) as count FROM employees WHERE role = "employee"');
-    const { rows: revenue } = await db.query('SELECT SUM(payment_amount) as total FROM lottery_participants WHERE payment_status = "paid"');
+    const { rows: employees } = await db.query(`SELECT COUNT(*) as count FROM employees WHERE role = 'employee'`);
+    const { rows: revenue } = await db.query(`SELECT SUM(payment_amount) as total FROM lottery_participants WHERE payment_status = 'paid'`);
     
     res.json({
       totalCompanies: companies[0].count,
@@ -132,7 +132,7 @@ exports.createCompany = async (req, res) => {
   try {
     // 1. Create company
     await db.query(
-      'INSERT INTO companies (id, name, owner_email, plan, status) VALUES (?, ?, ?, ?, "active")',
+      `INSERT INTO companies (id, name, owner_email, plan, status) VALUES (?, ?, ?, ?, 'active')`,
       [companyId, name, owner_email, plan || 'standard']
     );
 
@@ -141,7 +141,7 @@ exports.createCompany = async (req, res) => {
 
     // 3. Create the initial admin user with password_hash
     await db.query(
-      'INSERT INTO employees (id, company_id, name, email, password_hash, role, is_active) VALUES (?, ?, ?, ?, ?, "admin", 1)',
+      `INSERT INTO employees (id, company_id, name, email, password_hash, role, is_active) VALUES (?, ?, ?, ?, ?, 'admin', 1)`,
       [ownerId, companyId, `${name} Admin`, owner_email, password_hash]
     );
 

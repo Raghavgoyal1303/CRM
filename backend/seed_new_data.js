@@ -1,4 +1,4 @@
-const { pool } = require('./src/config/db');
+﻿const { pool } = require('./src/config/db');
 
 async function seedData() {
   const connection = await pool.getConnection();
@@ -24,7 +24,7 @@ async function seedData() {
       ['emp-e003-0000-0000-000000000003', 'comp-0001-0000-0000-000000000001', 'Vikram Shah', 'vikram@eliterealty.com', 'employee'],
       ['emp-e004-0000-0000-000000000004', 'comp-0001-0000-0000-000000000001', 'Sneha Patel', 'sneha@eliterealty.com', 'employee'],
       ['emp-a001-0000-0000-000000000001', 'comp-0002-0000-0000-000000000002', 'Alpha Admin', 'admin@alphabuilders.com', 'admin'],
-      ['emp-super-0000-0000-000000000001', null, 'Super Admin', 'super@leadflow.com', 'superadmin']
+      ['emp-super-0000-0000-000000000001', null, 'Super Admin', 'super@Tricity Verified.com', 'superadmin']
     ];
 
     for (let [id, cid, name, email, role] of employees) {
@@ -82,3 +82,4 @@ async function seedData() {
 }
 
 seedData();
+

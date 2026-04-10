@@ -33,7 +33,7 @@ exports.createFollowUp = async (req, res) => {
   const id = randomUUID();
   try {
     await db.query(
-      'INSERT INTO follow_ups (id, company_id, lead_id, follow_up_date, notes, status) VALUES (?, ?, ?, ?, ?, "pending")',
+      `INSERT INTO follow_ups (id, company_id, lead_id, follow_up_date, notes, status) VALUES (?, ?, ?, ?, ?, 'pending')`,
       [id, company_id, lead_id, follow_up_date, notes]
     );
     res.status(201).json({ id, message: 'Follow-up scheduled' });

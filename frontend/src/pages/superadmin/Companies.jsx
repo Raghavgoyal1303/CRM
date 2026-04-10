@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Building2, Plus, Search, Slash, ExternalLink, CheckCircle2, Trash2, ShieldAlert, X, Key, ShieldCheck, Mail, Phone, User, Copy } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { superApi } from '../../api';
@@ -46,7 +46,7 @@ const Companies = () => {
       await superApi.updateStatus(comp.id, newStatus);
       setCompanies(prev => prev.map(c => c.id === comp.id ? { ...c, subscription_status: newStatus, status: newStatus } : c));
     } catch (err) {
-      console.error('❌ [Companies] Update Status Failed:', err);
+      console.error('âŒ [Companies] Update Status Failed:', err);
       // optimistic update on mock
       setCompanies(prev => prev.map(c => c.id === comp.id ? { ...c, subscription_status: newStatus, status: newStatus } : c));
     }
@@ -111,7 +111,7 @@ const Companies = () => {
       <header className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-heading font-black text-indigo-900 tracking-tight">Tenant Repository</h1>
-          <p className="text-sm text-gray-500 mt-1">Manage and audit all business entities on LeadFlow</p>
+          <p className="text-sm text-gray-500 mt-1">Manage and audit all business entities on Tricity Verified</p>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
@@ -208,7 +208,7 @@ const Companies = () => {
                       required
                       type="password"
                       className="input-field border-primary/30 focus:border-primary" 
-                      placeholder="••••••••" 
+                      placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" 
                       value={formData.ownerPassword}
                       onChange={e => setFormData({...formData, ownerPassword: e.target.value})}
                     />
@@ -285,11 +285,11 @@ const Companies = () => {
                     {comp.email}
                   </td>
                   <td className="px-6 py-5 text-center">
-                    <div className="text-sm font-black text-gray-700">{comp.employees ?? '—'}</div>
+                    <div className="text-sm font-black text-gray-700">{comp.employees ?? 'â€”'}</div>
                     <div className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Active</div>
                   </td>
                   <td className="px-6 py-5 text-sm text-gray-500 font-medium">
-                    {comp.created || (comp.created_at ? new Date(comp.created_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }) : '—')}
+                    {comp.created || (comp.created_at ? new Date(comp.created_at).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }) : 'â€”')}
                   </td>
                   <td className="px-6 py-5 text-right">
                     <div className="flex items-center justify-end gap-2">
@@ -461,3 +461,4 @@ const Companies = () => {
 };
 
 export default Companies;
+

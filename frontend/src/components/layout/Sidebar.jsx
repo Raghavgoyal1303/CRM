@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -33,7 +33,7 @@ const Sidebar = () => {
         <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
           <Square className="fill-white" size={20} />
         </div>
-        <span className="font-heading font-bold text-xl text-text-primary">LeadFlow CRM</span>
+        <span className="font-heading font-bold text-xl text-text-primary">Tricity Verified CRM</span>
       </Link>
 
       {/* Navigation */}
@@ -72,7 +72,7 @@ const Sidebar = () => {
           to="/"
           className="w-full flex items-center justify-center gap-2 px-4 py-2 text-primary hover:bg-indigo-50 transition-all duration-200 rounded-[10px] text-[11px] font-black uppercase tracking-widest mb-2"
         >
-          ← Back to Home
+          â† Back to Home
         </Link>
         <button
           onClick={logout}
@@ -87,3 +87,4 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+

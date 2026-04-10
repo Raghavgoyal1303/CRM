@@ -68,7 +68,7 @@ exports.handleAcefoneWebhook = async (req, res) => {
         targetLeadId = randomUUID();
         
         await connection.query(
-          'INSERT INTO leads (id, company_id, phone_number, name, status, source, assigned_to) VALUES (?, ?, ?, ?, "new", "call", ?)',
+          `INSERT INTO leads (id, company_id, phone_number, name, status, source, assigned_to) VALUES (?, ?, ?, ?, 'new', 'call', ?)`,
           [targetLeadId, companyId, phone, 'Inbound Call Lead', assignedEmployeeId]
         );
 

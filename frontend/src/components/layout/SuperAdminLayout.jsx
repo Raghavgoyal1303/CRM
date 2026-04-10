@@ -1,4 +1,4 @@
-import {
+﻿import {
   BarChart3,
   Building2,
   Users,
@@ -59,7 +59,7 @@ const SuperAdminLayout = ({ children }) => {
           <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200 group-hover:scale-110 transition-transform">
             <Infinity className="text-white" size={24} />
           </div>
-          <span className="text-xl font-heading font-black text-indigo-900 tracking-tight">LeadFlow <span className="text-indigo-400 font-extrabold">SAAS</span></span>
+          <span className="text-xl font-heading font-black text-indigo-900 tracking-tight">Tricity Verified <span className="text-indigo-400 font-extrabold">SAAS</span></span>
         </Link>
 
         <nav className="flex-1 px-4 mt-4 space-y-1 overflow-y-auto">
@@ -93,7 +93,7 @@ const SuperAdminLayout = ({ children }) => {
             to="/"
             className="w-full flex items-center justify-center gap-2 px-4 py-2 text-indigo-600 hover:bg-indigo-50 transition-all duration-200 rounded-[10px] text-[10px] font-black uppercase tracking-widest mb-2"
           >
-            ← Back to Home
+            â† Back to Home
           </Link>
           <div className="p-4 bg-indigo-900 rounded-[16px] text-white">
             <div className="flex items-center gap-3 mb-3">
@@ -127,3 +127,4 @@ const SuperAdminLayout = ({ children }) => {
 };
 
 export default SuperAdminLayout;
+

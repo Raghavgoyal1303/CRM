@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { 
   StyleSheet, 
   View, 
@@ -51,7 +51,7 @@ const ChangePasswordScreen = ({ navigation }) => {
              <Lock size={32} color={theme.colors.primary} />
           </View>
           <Text style={styles.title}>Update Security</Text>
-          <Text style={styles.subtitle}>Ensure your LeadFlow access remains secure by updating your credentials periodically.</Text>
+          <Text style={styles.subtitle}>Ensure your Tricity Verified access remains secure by updating your credentials periodically.</Text>
 
           <View style={styles.form}>
              <View style={styles.inputGroup}>
@@ -62,7 +62,7 @@ const ChangePasswordScreen = ({ navigation }) => {
                      secureTextEntry={!showPass}
                      value={currentPassword}
                      onChangeText={setCurrentPassword}
-                     placeholder="••••••••"
+                     placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                    />
                    <TouchableOpacity onPress={() => setShowPass(!showPass)}>
                       {showPass ? <EyeOff size={18} color={theme.colors.textMuted} /> : <Eye size={18} color={theme.colors.textMuted} />}
@@ -133,3 +133,4 @@ const styles = StyleSheet.create({
 });
 
 export default ChangePasswordScreen;
+

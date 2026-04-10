@@ -1,4 +1,4 @@
-const db = require('../config/db');
+﻿const db = require('../config/db');
 const { randomUUID } = require('crypto');
 
 exports.getSettings = async (req, res) => {
@@ -28,7 +28,7 @@ exports.updateSettings = async (req, res) => {
   const { company_id } = req.user;
   const { sms_enabled, whatsapp_enabled, sms_template, whatsapp_template } = req.body;
   try {
-    // LeadFlow logic: Upsert the company's auto-response configuration
+    // Tricity Verified logic: Upsert the company's auto-response configuration
     const { rows } = await db.query(
       'SELECT id FROM auto_response_settings WHERE company_id = ?',
       [company_id]
@@ -51,3 +51,4 @@ exports.updateSettings = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
