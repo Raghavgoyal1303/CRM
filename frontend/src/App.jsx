@@ -144,11 +144,11 @@ import IncomingCallPopup from './components/telephony/IncomingCallPopup';
 
 function App() {
   return (
-    <AuthProvider>
-      <SocketProvider>
-        <ErrorBoundary>
-          <IncomingCallPopup />
-          <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
+        <SocketProvider>
+          <ErrorBoundary>
+            <IncomingCallPopup />
             <Routes>
               {/* PUBLIC ROUTES */}
               <Route path="/" element={<HomePage />} />
@@ -205,16 +205,14 @@ function App() {
               <Route path="/dashboard/performance" element={<ProtectedRoute roles={['employee']}><PerformancePage /></ProtectedRoute>} />
               <Route path="/dashboard/calls" element={<ProtectedRoute roles={['employee']}><CallLogsPage /></ProtectedRoute>} />
               <Route path="/dashboard/communications" element={<ProtectedRoute roles={['employee']}><div className="p-20 text-center font-bold text-gray-400">My Comms Stub</div></ProtectedRoute>} />
-              {/* FALLBACK */}
-
 
               {/* FALLBACK */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
-          </BrowserRouter>
-        </ErrorBoundary>
-      </SocketProvider>
-    </AuthProvider>
+          </ErrorBoundary>
+        </SocketProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 
