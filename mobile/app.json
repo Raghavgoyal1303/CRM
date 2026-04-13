@@ -11,27 +11,24 @@
     },
     "plugins": [
       "expo-secure-store",
-      "expo-camera",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Tricity Verified to access your camera for attendance photos.",
+          "microphonePermission": "Allow Tricity Verified to access your microphone."
+        }
+      ],
       "expo-media-library",
-      "expo-notifications"
+      "expo-notifications",
+      "expo-system-ui"
     ],
     "android": {
       "package": "com.tricityverified.app",
       "usesCleartextTraffic": true,
-      "permissions": [
-        "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO",
-        "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE",
-        "android.permission.READ_MEDIA_VISUAL_USER_SELECTED",
-        "android.permission.READ_MEDIA_IMAGES",
-        "android.permission.READ_MEDIA_VIDEO",
-        "android.permission.READ_MEDIA_AUDIO"
-      ]
+      "jsEngine": "jsc"
     },
     "extra": {
       "eas": {
-        "projectId": "16cea0bc-66f7-473e-9486-2e31c43e806a"
       }
     }
   }

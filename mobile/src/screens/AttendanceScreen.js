@@ -11,7 +11,7 @@ import {
   Dimensions,
   StatusBar
 } from 'react-native';
-import { Camera, CameraView, useCameraPermissions } from 'expo-camera';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 import { useAuth } from '../context/AuthContext';
 import { theme } from '../theme';
