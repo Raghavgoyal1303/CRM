@@ -16,7 +16,7 @@ const Blacklist = () => {
 
     const fetchBlacklist = async () => {
         try {
-            const res = await blacklistApi.getBlacklist();
+            const res = await blacklistApi.getAll();
             setBlacklist(res.data || []);
         } catch (err) {
             console.error('Failed to fetch blacklist');

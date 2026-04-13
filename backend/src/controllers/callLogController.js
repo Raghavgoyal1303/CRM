@@ -1,10 +1,10 @@
-const db = require('../config/db');
+const { query, transaction } = require('../config/db');
 const { randomUUID } = require('crypto');
 
 exports.getCallLogs = async (req, res) => {
   const { company_id } = req.user;
   try {
-    const { rows } = await db.query(
+    const { rows } = await query(
       'SELECT id, phone_number, call_status, duration, direction, created_at FROM call_logs WHERE company_id = ? ORDER BY created_at DESC',
       [company_id]
     );
@@ -19,7 +19,7 @@ exports.logCall = async (req, res) => {
   const { phone_number, call_status, duration, direction } = req.body;
   const id = randomUUID();
   try {
-    await db.query(
+    await query(
       'INSERT INTO call_logs (id, company_id, phone_number, call_status, duration, direction) VALUES (?, ?, ?, ?, ?, ?)',
       [id, company_id, phone_number, call_status, duration || 0, direction || 'outbound']
     );

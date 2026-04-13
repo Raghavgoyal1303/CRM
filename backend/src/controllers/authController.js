@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const { query, transaction } = require('../config/db');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
@@ -9,7 +9,7 @@ exports.login = async (req, res) => {
   const { email, password } = req.body;
   try {
     // 1. Check if employee exists and is active
-    const { rows } = await db.query(
+    const { rows } = await query(
       'SELECT id, name, role, company_id, password_hash, is_active FROM employees WHERE email = ?',
       [email]
     );
@@ -37,7 +37,7 @@ exports.login = async (req, res) => {
     // 3. Fetch company name for the UI context
     let company_name = 'Tricity Verified Platform';
     if (user.role !== 'superadmin' && user.company_id) {
-      const { rows: compRows } = await db.query('SELECT name FROM companies WHERE id = ?', [user.company_id]);
+      const { rows: compRows } = await query('SELECT name FROM companies WHERE id = ?', [user.company_id]);
       if (compRows.length > 0) company_name = compRows[0].name;
     }
 
@@ -73,7 +73,7 @@ exports.login = async (req, res) => {
  */
 exports.getMe = async (req, res) => {
   try {
-    const { rows } = await db.query(
+    const { rows } = await query(
       'SELECT id, name, role, company_id FROM employees WHERE id = ?',
       [req.user.id]
     );
@@ -83,7 +83,7 @@ exports.getMe = async (req, res) => {
     const user = rows[0];
     let company_name = 'Tricity Verified Platform';
     if (user.role !== 'superadmin' && user.company_id) {
-      const { rows: compRows } = await db.query('SELECT name FROM companies WHERE id = ?', [user.company_id]);
+      const { rows: compRows } = await query('SELECT name FROM companies WHERE id = ?', [user.company_id]);
       if (compRows.length > 0) company_name = compRows[0].name;
     }
 

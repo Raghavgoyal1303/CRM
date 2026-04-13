@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { UserCheck, Search, Filter, Download, ExternalLink, Calendar, Phone, MessageSquare, Tag, Trash2, ShieldCheck, CheckCircle2 } from 'lucide-react';
-import { campaignApi } from '../../api';
+import { outboundLeadApi } from '../../api';
 
 const OutboundLeads = () => {
     const [leads, setLeads] = useState([]);
@@ -14,7 +14,7 @@ const OutboundLeads = () => {
 
     const fetchLeads = async () => {
         try {
-            const res = await campaignApi.getInterestedLeads();
+            const res = await outboundLeadApi.getAll();
             setLeads(res.data || []);
         } catch (err) {
             console.error('Failed to fetch outbound leads');
@@ -25,7 +25,7 @@ const OutboundLeads = () => {
 
     const handleConvert = async (id) => {
         try {
-            await campaignApi.convertToCrmLead(id);
+            await outboundLeadApi.convert(id);
             fetchLeads();
         } catch (err) {
             console.error('Conversion failed');

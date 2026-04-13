@@ -1,10 +1,10 @@
-const db = require('../config/db');
+const { query } = require('../config/db');
 const { randomUUID } = require('crypto');
 
 exports.getBlacklist = async (req, res) => {
   const { company_id } = req.user;
   try {
-    const { rows } = await db.query(
+    const { rows } = await query(
       'SELECT id, phone_number, reason, created_at FROM blacklist WHERE company_id = ? ORDER BY created_at DESC',
       [company_id]
     );
@@ -37,7 +37,7 @@ exports.removeFromBlacklist = async (req, res) => {
   const { id } = req.params;
   const { company_id } = req.user;
   try {
-    await db.query('DELETE FROM blacklist WHERE id = ? AND company_id = ?', [id, company_id]);
+    await query('DELETE FROM blacklist WHERE id = ? AND company_id = ?', [id, company_id]);
     res.json({ message: 'Caller reinstated' });
   } catch (err) {
     res.status(500).json({ message: 'Internal Server Error' });

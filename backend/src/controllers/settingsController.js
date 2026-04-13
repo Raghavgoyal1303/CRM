@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const { query, transaction } = require('../config/db');
 const bcrypt = require('bcrypt');
 
 /**
@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 exports.getCompanySettings = async (req, res) => {
   const { company_id } = req.user;
   try {
-    const { rows } = await db.query('SELECT * FROM companies WHERE id = ?', [company_id]);
+    const { rows } = await query('SELECT * FROM companies WHERE id = ?', [company_id]);
     if (rows.length === 0) return res.status(404).json({ message: 'Company not found' });
     res.json(rows[0]);
   } catch (err) {
@@ -30,7 +30,7 @@ exports.updateCompanySettings = async (req, res) => {
   } = req.body;
 
   try {
-    await db.query(`
+    await query(`
       UPDATE companies 
       SET name = ?, 
           email = ?, 
@@ -68,7 +68,7 @@ exports.updateAdminPassword = async (req, res) => {
   const { newPassword } = req.body;
   try {
     const password_hash = await bcrypt.hash(newPassword, 10);
-    await db.query('UPDATE employees SET password_hash = ? WHERE id = ?', [password_hash, req.user.id]);
+    await query('UPDATE employees SET password_hash = ? WHERE id = ?', [password_hash, req.user.id]);
     res.json({ message: 'Personnel credentials secured' });
   } catch (err) {
     res.status(500).json({ message: 'Internal Server Error' });

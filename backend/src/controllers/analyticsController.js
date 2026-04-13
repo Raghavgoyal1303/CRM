@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const { query, transaction } = require('../config/db');
 
 /**
  * Main company dashboard aggregation
@@ -8,7 +8,7 @@ exports.getDashboardStats = async (req, res) => {
   try {
     const fetchMetric = async (sql, params) => {
       try {
-        const { rows } = await db.query(sql, params);
+        const { rows } = await query(sql, params);
         return rows[0]?.count || 0;
       } catch (err) {
         console.error('[Analytics] Metric failed:', err.message);
@@ -30,7 +30,7 @@ exports.getDashboardStats = async (req, res) => {
     const closedLeads = await fetchMetric(`SELECT COUNT(*) as count FROM leads ${leadFilter} AND status = 'closed'`, params);
     
     // Status breakdown
-    const { rows: statusRows } = await db.query(
+    const { rows: statusRows } = await query(
       `SELECT status, COUNT(*) as count FROM leads ${leadFilter} GROUP BY status`,
       params
     );
@@ -59,7 +59,7 @@ exports.getDashboardStats = async (req, res) => {
 exports.getEmployeePerformance = async (req, res) => {
   const { company_id } = req.user;
   try {
-    const { rows } = await db.query(`
+    const { rows } = await query(`
       SELECT 
         e.id as employee_id,
         e.name as employee_name,
@@ -85,7 +85,7 @@ exports.getEmployeePerformance = async (req, res) => {
 exports.getCallVolumeStats = async (req, res) => {
   const { company_id } = req.user;
   try {
-    const { rows } = await db.query(`
+    const { rows } = await query(`
       SELECT DATE(created_at) as date, direction, COUNT(*) as count 
       FROM call_logs 
       WHERE company_id = ? 
@@ -104,7 +104,7 @@ exports.getCallVolumeStats = async (req, res) => {
 exports.getPipelineStats = async (req, res) => {
   const { company_id } = req.user;
   try {
-    const { rows } = await db.query(`
+    const { rows } = await query(`
       SELECT status, COUNT(*) as value 
       FROM leads 
       WHERE company_id = ? 

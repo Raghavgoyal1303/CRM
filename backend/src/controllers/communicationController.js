@@ -1,10 +1,10 @@
-const db = require('../config/db');
+const { query, transaction } = require('../config/db');
 const { randomUUID } = require('crypto');
 
 exports.getCommunications = async (req, res) => {
   const { company_id } = req.user;
   try {
-    const { rows } = await db.query(
+    const { rows } = await query(
       'SELECT id, phone_number, channel, message_text, status, triggered_by, sent_at FROM communication_logs WHERE company_id = ? ORDER BY sent_at DESC',
       [company_id]
     );
@@ -18,7 +18,7 @@ exports.getLeadCommunications = async (req, res) => {
   const { leadId } = req.params;
   const { company_id } = req.user;
   try {
-    const { rows } = await db.query(
+    const { rows } = await query(
       'SELECT * FROM communication_logs WHERE lead_id = ? AND company_id = ? ORDER BY sent_at DESC',
       [leadId, company_id]
     );
@@ -34,7 +34,7 @@ exports.sendManualSMS = async (req, res) => {
   const id = randomUUID();
   try {
     // Tricity Verified logic: Log the dispatch first
-    await db.query(
+    await query(
       `INSERT INTO communication_logs (id, company_id, lead_id, phone_number, channel, message_text, status, triggered_by) VALUES (?, ?, ?, ?, 'sms', ?, 'sent', 'manual')`,
       [id, company_id, lead_id, phone_number, message_text]
     );
@@ -50,7 +50,7 @@ exports.sendManualWhatsApp = async (req, res) => {
   const id = randomUUID();
   try {
     // WhatsApp lead logic: Log with brochure support
-    await db.query(
+    await query(
       `INSERT INTO communication_logs (id, company_id, lead_id, phone_number, channel, message_text, status, triggered_by) VALUES (?, ?, ?, ?, 'whatsapp', ?, 'sent', 'manual')`,
       [id, company_id, lead_id, phone_number, message_text]
     );

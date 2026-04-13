@@ -1,9 +1,9 @@
-const db = require('../config/db');
+const { query, transaction } = require('../config/db');
 
 exports.getRetryQueue = async (req, res) => {
   const { company_id } = req.user;
   try {
-    const { rows } = await db.query(
+    const { rows } = await query(
       `SELECT rq.*, oc.name as campaign_name 
        FROM retry_queue rq
        LEFT JOIN outbound_campaigns oc ON rq.campaign_id = oc.id
@@ -22,7 +22,7 @@ exports.processManualRetry = async (req, res) => {
   const { company_id } = req.user;
   try {
     // In a production environment, this would call the dialer service immediately
-    await db.query(
+    await query(
       `UPDATE retry_queue SET status = 'retrying', retry_count = retry_count + 1 WHERE id = ? AND company_id = ?`,
       [id, company_id]
     );

@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const { query, transaction } = require('../config/db');
 
 exports.clockIn = async (req, res) => {
     const { userId } = req.body;
@@ -12,7 +12,7 @@ exports.clockIn = async (req, res) => {
         console.log('[Attendance] Clock-in attempt for:', userId, 'at Date:', date);
         
         // Check if already clocked in today
-        const [existing] = await db.execute(
+        const [existing] = await execute(
             'SELECT * FROM attendance WHERE user_id = ? AND date = ? AND clock_out IS NULL',
             [userId, date]
         );
@@ -22,7 +22,7 @@ exports.clockIn = async (req, res) => {
             return res.status(400).json({ message: 'Already clocked in' });
         }
 
-        await db.execute(
+        await execute(
             'INSERT INTO attendance (user_id, clock_in, photo_url, date) VALUES (?, ?, ?, ?)',
             [userId, now, photoUrl, date]
         );
@@ -42,7 +42,7 @@ exports.clockOut = async (req, res) => {
     const now = nowIST.toISOString().slice(0, 19).replace('T', ' ');
 
     try {
-        const [existing] = await db.execute(
+        const [existing] = await execute(
             'SELECT * FROM attendance WHERE user_id = ? AND date = ? AND clock_out IS NULL',
             [userId, date]
         );
@@ -51,7 +51,7 @@ exports.clockOut = async (req, res) => {
             return res.status(400).json({ message: 'No active clock-in found' });
         }
 
-        await db.execute(
+        await execute(
             `UPDATE attendance SET clock_out = ?, status = 'inactive' WHERE id = ?`,
             [now, existing[0].id]
         );
@@ -67,7 +67,7 @@ exports.getStatus = async (req, res) => {
     const { userId } = req.query;
 
     try {
-        const [rows] = await db.execute(
+        const [rows] = await execute(
             'SELECT * FROM attendance WHERE user_id = ? ORDER BY created_at DESC LIMIT 1',
             [userId]
         );
@@ -101,7 +101,7 @@ exports.getAll = async (req, res) => {
     const date = nowIST.toISOString().split('T')[0];
 
     try {
-        const [rows] = await db.execute(`
+        const [rows] = await execute(`
             SELECT a.*, e.name as user_name, e.role 
             FROM attendance a 
             JOIN employees e ON a.user_id = e.id 

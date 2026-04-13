@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const { query } = require('../config/db');
 const { randomUUID } = require('crypto');
 
 exports.getOutboundLeads = async (req, res) => {
@@ -23,7 +23,7 @@ exports.updateOutboundLead = async (req, res) => {
   const { status, notes, budget, project_location } = req.body;
   const { company_id } = req.user;
   try {
-    await db.query(
+    await query(
       'UPDATE outbound_leads SET status = ?, notes = ?, budget = ?, project_location = ? WHERE id = ? AND company_id = ?',
       [status, notes, budget, project_location, id, company_id]
     );
@@ -46,12 +46,12 @@ exports.convertToLead = async (req, res) => {
     const prospect = rows[0];
     const leadId = randomUUID();
     
-    await db.query(
+    await query(
       `INSERT INTO leads (id, company_id, name, phone_number, status, source) VALUES (?, ?, ?, ?, 'new', 'campaign')`,
       [leadId, company_id, prospect.name, prospect.phone_number]
     );
     
-    await db.query(
+    await query(
       `UPDATE outbound_leads SET converted_to_lead = 1, status = 'converted' WHERE id = ?`,
       [id]
     );
@@ -67,7 +67,7 @@ exports.setReminder = async (req, res) => {
   const { reminder_date } = req.body;
   const { company_id } = req.user;
   try {
-    await db.query(
+    await query(
       `UPDATE outbound_leads SET site_visit_date = ?, status = 'reminder_set' WHERE id = ? AND company_id = ?`,
       [reminder_date, id, company_id]
     );

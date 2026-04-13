@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const { query, transaction } = require('../config/db');
 const { randomUUID } = require('crypto');
 
 exports.getFollowUps = async (req, res) => {
@@ -19,7 +19,7 @@ exports.getFollowUps = async (req, res) => {
 
     sql += ' ORDER BY f.next_followup_date ASC';
 
-    const { rows } = await db.query(sql, params);
+    const { rows } = await query(sql, params);
     res.json(rows || []);
   } catch (err) {
     console.error('[FollowUps] Query failed:', err.message);
@@ -32,7 +32,7 @@ exports.createFollowUp = async (req, res) => {
   const { lead_id, follow_up_date, notes } = req.body;
   const id = randomUUID();
   try {
-    await db.query(
+    await query(
       `INSERT INTO follow_ups (id, company_id, lead_id, follow_up_date, notes, status) VALUES (?, ?, ?, ?, ?, 'pending')`,
       [id, company_id, lead_id, follow_up_date, notes]
     );
@@ -47,7 +47,7 @@ exports.updateFollowUpStatus = async (req, res) => {
   const { status } = req.body;
   const { company_id } = req.user;
   try {
-    await db.query(
+    await query(
       'UPDATE follow_ups SET status = ? WHERE id = ? AND company_id = ?',
       [status, id, company_id]
     );
@@ -61,7 +61,7 @@ exports.deleteFollowUp = async (req, res) => {
   const { id } = req.params;
   const { company_id } = req.user;
   try {
-    await db.query('DELETE FROM follow_ups WHERE id = ? AND company_id = ?', [id, company_id]);
+    await query('DELETE FROM follow_ups WHERE id = ? AND company_id = ?', [id, company_id]);
     res.json({ message: 'Follow-up cancelled' });
   } catch (err) {
     res.status(500).json({ message: 'Internal Server Error' });

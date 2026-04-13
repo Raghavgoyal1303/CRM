@@ -1,10 +1,10 @@
-﻿const db = require('../config/db');
+﻿const { query, transaction } = require('../config/db');
 const { randomUUID } = require('crypto');
 
 exports.getSettings = async (req, res) => {
   const { company_id } = req.user;
   try {
-    const { rows } = await db.query(
+    const { rows } = await query(
       'SELECT * FROM auto_response_settings WHERE company_id = ?',
       [company_id]
     );
@@ -29,19 +29,19 @@ exports.updateSettings = async (req, res) => {
   const { sms_enabled, whatsapp_enabled, sms_template, whatsapp_template } = req.body;
   try {
     // Tricity Verified logic: Upsert the company's auto-response configuration
-    const { rows } = await db.query(
+    const { rows } = await query(
       'SELECT id FROM auto_response_settings WHERE company_id = ?',
       [company_id]
     );
 
     if (rows.length > 0) {
-      await db.query(
+      await query(
         'UPDATE auto_response_settings SET sms_enabled = ?, whatsapp_enabled = ?, sms_template = ?, whatsapp_template = ? WHERE company_id = ?',
         [sms_enabled, whatsapp_enabled, sms_template, whatsapp_template, company_id]
       );
     } else {
       const id = randomUUID();
-      await db.query(
+      await query(
         'INSERT INTO auto_response_settings (id, company_id, sms_enabled, whatsapp_enabled, sms_template, whatsapp_template) VALUES (?, ?, ?, ?, ?, ?)',
         [id, company_id, sms_enabled, whatsapp_enabled, sms_template, whatsapp_template]
       );

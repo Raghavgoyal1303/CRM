@@ -28,7 +28,7 @@ const AdminCampaigns = () => {
         e.preventDefault();
         setFormLoading(true);
         try {
-            await campaignApi.createCampaign(formData);
+            await campaignApi.create(formData);
             fetchCampaigns();
             setIsModalOpen(false);
             setFormData({ name: '', description: '', daily_limit: 1000 });
