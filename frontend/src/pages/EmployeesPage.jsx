@@ -26,6 +26,7 @@ const EmployeesPage = () => {
   const [performance, setPerformance] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [openMenuId, setOpenMenuId] = useState(null);
@@ -70,27 +71,39 @@ const EmployeesPage = () => {
 
   const handleAddEmployee = async (e) => {
     e.preventDefault();
-    
-    // Validate first name requirement
     const firstName = formData.name.trim().split(' ')[0];
     if (!emailPrefix.toLowerCase().startsWith(firstName.toLowerCase())) {
         setError(`Email prefix must start with the employee's first name ("${firstName}")`);
         return;
     }
-
     setFormLoading(true);
     setError('');
-    
     const fullEmail = `${emailPrefix.toLowerCase()}${companySuffix}`;
-    
     try {
       await employeeApi.createEmployee({ ...formData, email: fullEmail });
       await fetchData();
       setShowAddModal(false);
-      setFormData({ name: '', email: '', phone_number: '', password: '', role: 'employee' });
+      setFormData({ name: '', email: '', phone_number: '', password: '', role: 'employee', acefone_extension: '' });
       setEmailPrefix('');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to add employee');
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const handleEditEmployee = async (e) => {
+    e.preventDefault();
+    setFormLoading(true);
+    setError('');
+    try {
+      await employeeApi.updateEmployee(selectedEmp.id, formData);
+      await fetchData();
+      setShowEditModal(false);
+      setSelectedEmp(null);
+      setFormData({ name: '', email: '', phone_number: '', password: '', role: 'employee', acefone_extension: '' });
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to update operative');
     } finally {
       setFormLoading(false);
     }
@@ -122,7 +135,7 @@ const EmployeesPage = () => {
   };
 
   const handleDeleteEmployee = async (id, name) => {
-    if (window.confirm(`CAUTION: Are you sure you want to REVOKE ACCESS for ${name}? This will perform a soft-delete.`)) {
+    if (window.confirm(`CAUTION: Are you sure you want to REVOKE ACCESS for ${name}?`)) {
       try {
         await employeeApi.deleteEmployee(id);
         fetchData();
@@ -157,7 +170,6 @@ const EmployeesPage = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500 pb-10">
-      {/* Header Row */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <h1 className="text-2xl font-heading font-black text-indigo-900 tracking-tight">Active Operatives</h1>
@@ -166,7 +178,10 @@ const EmployeesPage = () => {
           </div>
         </div>
         <button 
-          onClick={() => setShowAddModal(true)}
+          onClick={() => {
+            setFormData({ name: '', email: '', phone_number: '', password: '', role: 'employee', acefone_extension: '' });
+            setShowAddModal(true);
+          }}
           className="btn-primary h-11 px-6 flex items-center gap-2 shadow-lg shadow-indigo-100 font-bold text-sm"
         >
           <UserPlus size={18} />
@@ -174,7 +189,6 @@ const EmployeesPage = () => {
         </button>
       </div>
 
-      {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="card p-6 bg-white border-l-4 border-l-indigo-600 shadow-xl shadow-indigo-900/5">
            <div className="flex items-center gap-4">
@@ -211,7 +225,6 @@ const EmployeesPage = () => {
         </div>
       </div>
 
-      {/* Employees Table */}
       <div className="card !p-0 overflow-hidden shadow-xl shadow-indigo-900/5 bg-white">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
@@ -222,13 +235,12 @@ const EmployeesPage = () => {
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400">Role</th>
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400">Status</th>
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400">Total Leads</th>
-                <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400">Acefone Ext</th>
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#F0EEF8]">
               {loading ? (
-                <tr><td colSpan="7" className="px-6 py-20 text-center text-gray-400 font-bold animate-pulse">Establishing operative network...</td></tr>
+                <tr><td colSpan="6" className="px-6 py-20 text-center text-gray-400 font-bold animate-pulse">Establishing operative network...</td></tr>
               ) : employees.map((emp) => {
                 const perf = getPerf(emp.id);
                 return (
@@ -243,42 +255,25 @@ const EmployeesPage = () => {
                         </div>
                         <div className="flex flex-col">
                            <span className="text-sm font-bold text-indigo-900">{emp.name}</span>
-                           <span className="text-[11px] text-gray-400 font-medium">{emp.email}</span>
+                           <span className="text-[11px] text-gray-400 font-medium">Ext: {emp.acefone_extension || '—'}</span>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-5 font-mono text-xs text-gray-400">{emp.phone_number || '—'}</td>
-                    <td className="px-6 py-5">
-                      <span className={`badge ${emp.role === 'admin' ? 'bg-indigo-50 text-indigo-600' : 'bg-emerald-50 text-emerald-600'} text-[9px] font-black uppercase tracking-widest`}>
-                        {emp.role}
-                      </span>
-                    </td>
+                    <td className="px-6 py-5 uppercase text-[9px] font-black tracking-widest text-indigo-500">{emp.role}</td>
                     <td className="px-6 py-5">
                       <button 
                         onClick={() => handleToggleStatus(emp.id, emp.is_active)}
                         className={`w-10 h-5 rounded-full relative transition-colors ${emp.is_active ? 'bg-emerald-500' : 'bg-gray-300'}`}
                       >
-                         <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-all ${emp.is_active ? 'right-0.5 shadow-[-2px_0_4px_rgba(0,0,0,0.1)]' : 'left-0.5 shadow-[2px_0_4px_rgba(0,0,0,0.1)]'}`} />
+                         <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-all ${emp.is_active ? 'right-0.5' : 'left-0.5'}`} />
                       </button>
                     </td>
-                    <td className="px-6 py-5">
-                       <span className="text-sm font-bold text-indigo-900">{perf.total_leads}</span>
-                    </td>
-                    <td className="px-6 py-5">
-                       <div className="flex flex-col gap-1.5">
-                          <span className="text-xs font-black text-indigo-600">{perf.conversion_rate}%</span>
-                          <div className="w-16 h-1 w-full max-w-[80px] bg-indigo-50 rounded-full overflow-hidden">
-                             <div className="h-full bg-indigo-600 rounded-full" style={{ width: `${perf.conversion_rate}%` }} />
-                          </div>
-                       </div>
-                    </td>
-                    <td className="px-6 py-5">
-                       <span className="text-xs font-mono font-bold text-indigo-600">{emp.acefone_extension || '—'}</span>
-                    </td>
+                    <td className="px-6 py-5 font-bold text-indigo-900">{perf.total_leads}</td>
                     <td className="px-6 py-5 text-right relative">
                        <button 
                         onClick={() => setOpenMenuId(openMenuId === emp.id ? null : emp.id)}
-                        className={`p-2 rounded-lg transition-all ${openMenuId === emp.id ? 'bg-indigo-50 text-indigo-600' : 'text-gray-300 hover:text-indigo-600'}`}
+                        className="text-gray-300 hover:text-indigo-600"
                        >
                           <MoreVertical size={18} />
                        </button>
@@ -293,6 +288,18 @@ const EmployeesPage = () => {
                               exit={{ opacity: 0, scale: 0.95, y: -10 }}
                               className="absolute right-6 top-16 w-48 bg-white rounded-2xl shadow-2xl border border-[#F0EEF8] z-20 py-2 overflow-hidden"
                             >
+                               <button 
+                                onClick={() => {
+                                  setSelectedEmp(emp);
+                                  setFormData({ name: emp.name, phone_number: emp.phone_number || '', acefone_extension: emp.acefone_extension || '', role: emp.role });
+                                  setShowEditModal(true);
+                                  setOpenMenuId(null);
+                                }}
+                                className="w-full px-4 py-3 flex items-center gap-3 text-xs font-bold text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                               >
+                                  <Pencil size={14} />
+                                  <span>Edit Details</span>
+                               </button>
                                <button 
                                 onClick={() => {
                                   setSelectedEmp(emp);
@@ -325,224 +332,61 @@ const EmployeesPage = () => {
         </div>
       </div>
 
-      {/* Add Employee Modal */}
       <AnimatePresence>
+        {/* ADD MODAL */}
         {showAddModal && (
           <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => !formLoading && setShowAddModal(false)}
-              className="fixed inset-0 bg-indigo-900/20 backdrop-blur-[4px] z-[80]"
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[480px] bg-white rounded-[32px] shadow-2xl z-[90] p-8 border border-[#F0EEF8]"
-            >
+            <motion.div className="fixed inset-0 bg-indigo-900/20 backdrop-blur-[4px] z-[80]" onClick={() => !formLoading && setShowAddModal(false)} />
+            <motion.div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[480px] bg-white rounded-[32px] shadow-2xl z-[90] p-8 border border-[#F0EEF8]">
               <div className="flex items-center justify-between mb-8">
-                 <div>
-                    <h2 className="text-xl font-heading font-black text-indigo-900 tracking-tight">Deploy Operative</h2>
-                    <p className="text-[11px] text-gray-400 font-black uppercase tracking-widest mt-1">New Credential Provisioning</p>
-                 </div>
-                 <button 
-                  onClick={() => !formLoading && setShowAddModal(false)}
-                  className="w-10 h-10 rounded-full hover:bg-[#F9F7F4] flex items-center justify-center text-gray-400 hover:text-indigo-600 transition-all"
-                 >
-                    <X size={24} />
-                 </button>
+                <h2 className="text-xl font-heading font-black text-indigo-900">Deploy Operative</h2>
+                <button onClick={() => setShowAddModal(false)}><X size={24} /></button>
               </div>
-
-              <form onSubmit={handleAddEmployee} className="space-y-5">
-                 {error && <div className="p-4 bg-rose-50 text-rose-600 rounded-[16px] text-xs font-bold border border-rose-100">{error}</div>}
-
-                 <div className="space-y-1.5 focus-within:text-indigo-600 transition-colors">
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Full Legal Name</label>
-                    <div className="relative">
-                       <input 
-                        required
-                        type="text" 
-                        placeholder="e.g. Rahul Sharma"
-                        className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-[16px] px-4 py-3.5 text-sm font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                        value={formData.name}
-                        onChange={e => setFormData({ ...formData, name: e.target.value })}
-                       />
-                    </div>
+              <form onSubmit={handleAddEmployee} className="space-y-4">
+                 {error && <div className="p-3 bg-rose-50 text-rose-600 rounded-xl text-xs font-bold">{error}</div>}
+                 <input className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-xl px-4 py-3 text-sm font-bold" placeholder="Full Name" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
+                 <div className="flex gap-2">
+                    <input className="flex-1 bg-[#F9F7F4] border border-[#F0EEF8] rounded-xl px-4 py-3 text-xs font-bold" placeholder="Login Prefix" value={emailPrefix} onChange={e => setEmailPrefix(e.target.value)} required />
+                    <div className="p-3 text-[10px] font-black text-indigo-400">{companySuffix}</div>
                  </div>
-
-                 <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1.5 focus-within:text-indigo-600 transition-colors">
-                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Login Prefix</label>
-                        <div className="flex items-center gap-0">
-                           <input 
-                            required
-                            type="text" 
-                            placeholder="firstname123"
-                            className="flex-1 bg-[#F9F7F4] border border-[#F0EEF8] rounded-l-[16px] px-4 py-3.5 text-[11px] font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all border-r-0"
-                            value={emailPrefix}
-                            onChange={e => setEmailPrefix(e.target.value.toLowerCase().replace(/\s+/g, ''))}
-                           />
-                           <div className="bg-indigo-50 border border-[#F0EEF8] rounded-r-[16px] px-3 py-3.5 text-[10px] font-black text-indigo-600 border-l-0 border-r border-[#f0eef8] whitespace-nowrap">
-                              {companySuffix}
-                           </div>
-                        </div>
-                        <p className="text-[9px] text-gray-400 mt-1 ml-1 italic font-medium">Must start with employee's first name</p>
-                    </div>
-                    <div className="space-y-1.5 focus-within:text-indigo-600 transition-colors">
-                       <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Phone Protocol</label>
-                       <input 
-                        required
-                        type="text" 
-                        placeholder="+91..."
-                        className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-[16px] px-4 py-3.5 text-xs font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                        value={formData.phone_number}
-                        onChange={e => setFormData({ ...formData, phone_number: e.target.value })}
-                       />
-                    </div>
-                 </div>
-
-                 <div className="space-y-1.5 focus-within:text-indigo-600 transition-colors">
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Acefone Operative Extension</label>
-                    <input 
-                      type="text" 
-                      placeholder="e.g. 1001"
-                      className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-[16px] px-4 py-3.5 text-xs font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                      value={formData.acefone_extension}
-                      onChange={e => setFormData({ ...formData, acefone_extension: e.target.value })}
-                    />
-                 </div>
-
-                 <div className="space-y-1.5 focus-within:text-indigo-600 transition-colors">
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Access Role Archetype</label>
-                    <select 
-                      className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-[16px] px-4 py-3.5 text-sm font-black text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all appearance-none cursor-pointer"
-                      value={formData.role}
-                      onChange={e => setFormData({ ...formData, role: e.target.value })}
-                    >
-                      <option value="employee">Field Operative (Employee)</option>
-                      <option value="admin">Platform Administrator (Admin)</option>
-                    </select>
-                 </div>
-
-                 <div className="space-y-2 focus-within:text-indigo-600 transition-colors">
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Initial Access Cipher</label>
-                    <div className="relative">
-                       <input 
-                        required
-                        type={showPassword ? 'text' : 'password'} 
-                        placeholder="••••••••"
-                        className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-[16px] px-4 py-3.5 text-sm font-mono font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                        value={formData.password}
-                        onChange={e => setFormData({ ...formData, password: e.target.value })}
-                       />
-                       <button 
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-indigo-600"
-                       >
-                          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                       </button>
-                    </div>
-                    {/* Strength Bar */}
-                    <div className="flex gap-1 h-1 px-1">
-                       {[25, 50, 75, 100].map(step => (
-                         <div key={step} className={`flex-1 rounded-full transition-all duration-500 ${strength >= step ? (strength <= 25 ? 'bg-rose-500' : strength <= 50 ? 'bg-amber-500' : strength <= 75 ? 'bg-blue-500' : 'bg-emerald-500') : 'bg-gray-100'}`} />
-                       ))}
-                    </div>
-                 </div>
-
-                 <div className="flex gap-4 pt-6">
-                    <button 
-                      type="button" 
-                      disabled={formLoading}
-                      onClick={() => setShowAddModal(false)}
-                      className="flex-1 py-4 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-indigo-600 hover:bg-[#F9F7F4] rounded-[16px] transition-all"
-                    >
-                      Abort
-                    </button>
-                    <button 
-                      type="submit" 
-                      disabled={formLoading}
-                      className="flex-1 btn-primary py-4 rounded-[16px] text-xs font-black uppercase tracking-widest shadow-lg shadow-indigo-50 flex items-center justify-center"
-                    >
-                      {formLoading ? <RefreshCcw size={18} className="animate-spin" /> : 'Commit Deployment'}
-                    </button>
-                 </div>
+                 <input className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-xl px-4 py-3 text-sm font-bold" placeholder="Phone" value={formData.phone_number} onChange={e => setFormData({...formData, phone_number: e.target.value})} required />
+                 <input className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-xl px-4 py-3 text-sm font-bold" placeholder="Acefone Extension" value={formData.acefone_extension} onChange={e => setFormData({...formData, acefone_extension: e.target.value})} />
+                 <input className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-xl px-4 py-3 text-sm font-bold" type="password" placeholder="Initial Cipher" value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} required />
+                 <button type="submit" className="w-full btn-primary py-4 rounded-xl font-bold uppercase tracking-widest shadow-lg shadow-indigo-100">Commit Deployment</button>
               </form>
             </motion.div>
           </>
         )}
-        {/* Reset Password Modal */}
+
+        {/* EDIT MODAL */}
+        {showEditModal && (
+          <>
+            <motion.div className="fixed inset-0 bg-indigo-900/20 backdrop-blur-[4px] z-[80]" onClick={() => !formLoading && setShowEditModal(false)} />
+            <motion.div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[480px] bg-white rounded-[32px] shadow-2xl z-[90] p-8 border border-[#F0EEF8]">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-xl font-heading font-black text-indigo-900">Modify Operative</h2>
+                <button onClick={() => setShowEditModal(false)}><X size={24} /></button>
+              </div>
+              <form onSubmit={handleEditEmployee} className="space-y-4">
+                 {error && <div className="p-3 bg-rose-50 text-rose-600 rounded-xl text-xs font-bold">{error}</div>}
+                 <input className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-xl px-4 py-3 text-sm font-bold" placeholder="Full Name" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
+                 <input className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-xl px-4 py-3 text-sm font-bold" placeholder="Phone" value={formData.phone_number} onChange={e => setFormData({...formData, phone_number: e.target.value})} required />
+                 <input className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-xl px-4 py-3 text-sm font-bold" placeholder="Acefone Extension" value={formData.acefone_extension} onChange={e => setFormData({...formData, acefone_extension: e.target.value})} />
+                 <button type="submit" className="w-full btn-primary py-4 rounded-xl font-bold uppercase tracking-widest shadow-lg shadow-indigo-100">Save Modifications</button>
+              </form>
+            </motion.div>
+          </>
+        )}
+
+        {/* RESET PASSWORD MODAL */}
         {showResetModal && (
           <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => !formLoading && setShowResetModal(false)}
-              className="fixed inset-0 bg-indigo-900/20 backdrop-blur-[4px] z-[80]"
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[420px] bg-white rounded-[32px] shadow-2xl z-[90] p-8 border border-[#F0EEF8]"
-            >
-              <div className="flex items-center justify-between mb-8">
-                 <div>
-                    <h2 className="text-xl font-heading font-black text-indigo-900 tracking-tight">Recipher Operative</h2>
-                    <p className="text-[11px] text-gray-400 font-black uppercase tracking-widest mt-1">{selectedEmp?.name}</p>
-                 </div>
-                 <button 
-                  onClick={() => !formLoading && setShowResetModal(false)}
-                  className="w-10 h-10 rounded-full hover:bg-[#F9F7F4] flex items-center justify-center text-gray-400 hover:text-indigo-600 transition-all"
-                 >
-                    <X size={24} />
-                 </button>
-              </div>
-
+            <motion.div className="fixed inset-0 bg-indigo-900/20 backdrop-blur-[4px] z-[80]" onClick={() => setShowResetModal(false)} />
+            <motion.div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[420px] bg-white rounded-[32px] shadow-2xl z-[90] p-8 border border-[#F0EEF8]">
+              <h2 className="text-xl font-heading font-black text-indigo-900 mb-6">Recipher Operative</h2>
               <form onSubmit={handleResetPassword} className="space-y-6">
-                 <div className="space-y-2 focus-within:text-indigo-600 transition-colors">
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">New Access Cipher</label>
-                    <div className="relative">
-                       <input 
-                        required
-                        autoFocus
-                        type={showPassword ? 'text' : 'password'} 
-                        placeholder="••••••••"
-                        className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-[16px] px-4 py-3.5 text-sm font-mono font-bold text-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                        value={newPassword}
-                        onChange={e => setNewPassword(e.target.value)}
-                       />
-                       <button 
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-indigo-600"
-                       >
-                          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                       </button>
-                    </div>
-                 </div>
-
-                 <div className="flex gap-4">
-                    <button 
-                      type="button" 
-                      disabled={formLoading}
-                      onClick={() => setShowResetModal(false)}
-                      className="flex-1 py-4 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-indigo-600 hover:bg-[#F9F7F4] rounded-[16px] transition-all"
-                    >
-                      Abort
-                    </button>
-                    <button 
-                      type="submit" 
-                      disabled={formLoading}
-                      className="flex-1 btn-primary py-4 rounded-[16px] text-xs font-black uppercase tracking-widest shadow-lg shadow-indigo-50 flex items-center justify-center"
-                    >
-                      {formLoading ? <RefreshCcw size={18} className="animate-spin" /> : 'Confirm New Cipher'}
-                    </button>
-                 </div>
+                <input required type={showPassword ? 'text' : 'password'} className="w-full bg-[#F9F7F4] border border-[#F0EEF8] rounded-xl px-4 py-3 text-sm font-bold" placeholder="New Cipher" value={newPassword} onChange={e => setNewPassword(e.target.value)} />
+                <button type="submit" className="w-full btn-primary py-4 rounded-xl font-bold uppercase tracking-widest">Confirm New Cipher</button>
               </form>
             </motion.div>
           </>

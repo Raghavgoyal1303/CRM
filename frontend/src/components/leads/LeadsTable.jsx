@@ -1,10 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Phone } from 'lucide-react';
+import axios from '../../api'; // Confirmed from viewed files that this is the common axios instance
+import { toast } from 'react-hot-toast';
 
 import LeadStatusBadge from './LeadStatusBadge';
 
 const LeadsTable = ({ leads, isAdmin }) => {
+  const handleCall = async (leadId) => {
+    try {
+      const resp = await axios.post('/api/telephony/acefone/call', { leadId });
+      toast.success(resp.data.message || 'Call initiated!');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Call Failed');
+    }
+  };
+
   return (
     <div className="bg-card border border-white/5 rounded-xl overflow-hidden mt-8">
       <table className="w-full text-left">
@@ -41,9 +52,18 @@ const LeadsTable = ({ leads, isAdmin }) => {
                 {new Date(lead.created_at).toLocaleDateString()}
               </td>
               <td className="px-6 py-4 text-right">
-                <Link to={`/leads/${lead.id}`} className="text-accent hover:text-white transition-colors opacity-0 group-hover:opacity-100 flex items-center gap-2 justify-end text-sm">
-                  View Detail <ExternalLink size={14} />
-                </Link>
+                <div className="flex items-center gap-4 justify-end">
+                  <button 
+                    onClick={() => handleCall(lead.id)}
+                    className="p-2 bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white rounded-lg transition-all"
+                    title="Call via Acefone"
+                  >
+                    <Phone size={14} />
+                  </button>
+                  <Link to={`/leads/${lead.id}`} className="text-accent hover:text-white transition-colors opacity-0 group-hover:opacity-100 flex items-center gap-2 text-sm">
+                    View Detail <ExternalLink size={14} />
+                  </Link>
+                </div>
               </td>
             </tr>
           ))}

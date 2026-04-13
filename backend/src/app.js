@@ -6,6 +6,9 @@ const Sentry = require("@sentry/node");
 const { nodeProfilingIntegration } = require("@sentry/profiling-node");
 
 const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
+const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const db = require('./config/db');
@@ -13,6 +16,15 @@ const webhookRoutes = require('./routes/webhook');
 const attendanceRoutes = require('./routes/attendanceRoutes');
 
 const app = express();
+const server = http.createServer(app);
+
+// Socket.io Setup
+const io = new Server(server, {
+  cors: {
+    origin: '*', // Adjust for production security if needed
+    methods: ['GET', 'POST']
+  }
+});
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
@@ -23,10 +35,36 @@ Sentry.init({
   profilesSampleRate: 1.0,
 });
 
-// Trust proxy for HTTPS/SSL termination (needed for secure cookies)
+// Trust proxy for HTTPS/SSL termination
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1);
 }
+
+// Socket Auth Middleware
+io.use((socket, next) => {
+  const token = socket.handshake.auth.token;
+  if (!token) return next(new Error('Authentication error'));
+
+  jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret', (err, decoded) => {
+    if (err) return next(new Error('Authentication error'));
+    socket.user = decoded;
+    next();
+  });
+});
+
+io.on('connection', (socket) => {
+  console.log(`[Socket] User connected: ${socket.user.id} (Company: ${socket.user.company_id})`);
+  
+  // Join private room based on userId for targetted notifications
+  socket.join(`user_${socket.user.id}`);
+  
+  socket.on('disconnect', () => {
+    console.log(`[Socket] User disconnected: ${socket.user.id}`);
+  });
+});
+
+// Attached io to app for use in controllers
+app.set('io', io);
 
 // Middleware
 const allowedOrigins = [
@@ -40,20 +78,14 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    // 1. Allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
-
-    // 2. Allow specific whitelisted origins
     if (allowedOrigins.indexOf(origin) !== -1) {
       return callback(null, true);
     }
-
-    // 3. Dynamic: Allow any local network IP (192.168.x.x or 10.x.x.x) during development
     const isLocalNetwork = origin.startsWith('http://192.168.') || origin.startsWith('http://10.');
     if (process.env.NODE_ENV !== 'production' && isLocalNetwork) {
       return callback(null, true);
     }
-
     var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
     return callback(new Error(msg), false);
   },
@@ -92,7 +124,6 @@ app.use('/api/live-calls', require('./routes/liveCalls'));
 app.use('/api/attendance', attendanceRoutes);
 app.use('/v1', require('./routes/v1'));
 
-// The error handler must be BEFORE any other error middleware and AFTER all controllers
 Sentry.setupExpressErrorHandler(app);
 
 // Health check
@@ -118,8 +149,8 @@ app.get('/health', async (req, res) => {
 const PORT = process.env.PORT || 5000;
 const HOST = '0.0.0.0';
 
-app.listen(PORT, HOST, () => {
-  console.log(`Backend server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+server.listen(PORT, HOST, () => {
+  console.log(`Backend server (with Socket.io) running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
 });
 
 module.exports = app;

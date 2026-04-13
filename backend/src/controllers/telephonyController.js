@@ -78,6 +78,18 @@ exports.handleAcefoneWebhook = async (req, res) => {
             'INSERT INTO activity_logs (id, company_id, user_id, action, details) VALUES (?, ?, ?, ?, ?)',
             [randomUUID(), companyId, null, 'Inbound Lead (No Agents Online)', JSON.stringify({ phone, info: 'Lead created but no authorized agents were clocked-in.' })]
           );
+        } else {
+          // --- REAL-TIME NOTIFICATION ---
+          const io = req.app.get('io');
+          if (io) {
+            io.to(`user_${assignedEmployeeId}`).emit('NEW_INBOUND_CALL', {
+              leadId: targetLeadId,
+              phone: phone,
+              name: 'Inbound Call Lead',
+              timestamp: new Date()
+            });
+            console.log(`[Socket] Emitted NEW_INBOUND_CALL to User ${assignedEmployeeId}`);
+          }
         }
         
         console.log(`[Acefone Webhook] Lead ${targetLeadId}: Assigned=${assignedEmployeeId || 'NONE'}`);

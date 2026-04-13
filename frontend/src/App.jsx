@@ -139,75 +139,81 @@ class ErrorBoundary extends React.Component {
   }
 }
 
+import { SocketProvider } from './context/SocketContext';
+import IncomingCallPopup from './components/telephony/IncomingCallPopup';
+
 function App() {
   return (
     <AuthProvider>
-      <ErrorBoundary>
-        <BrowserRouter>
-          <Routes>
-            {/* PUBLIC ROUTES */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<AuthRedirect><Login /></AuthRedirect>} />
-            
-            {/* SUPER ADMIN ROUTES */}
-            <Route path="/super/*" element={<ProtectedRoute roles={['superadmin']}>
-              <Routes>
-                <Route path="dashboard" element={<SuperDashboard />} />
-                <Route path="companies" element={<Companies />} />
-                <Route path="companies/:id" element={<CompanyDetail />} />
-                <Route path="leads" element={<SuperLeads />} />
-                <Route path="employees" element={<SuperEmployees />} />
-                <Route path="call-logs" element={<SuperCallLogs />} />
-                <Route path="analytics" element={<SuperAnalytics />} />
-                <Route path="activity" element={<ActivityFeed />} />
-                <Route path="campaigns" element={<CampaignsOverview />} />
-                <Route path="communications" element={<GlobalCommunications />} />
-                <Route path="blacklist" element={<div className="p-20 text-center font-bold text-gray-400">Blacklist Monitor Stub</div>} />
-                <Route path="audit" element={<AuditLog />} />
-                <Route path="api-keys" element={<DeveloperAPI />} />
-                <Route path="lottery" element={<LotteryManagement />} />
-                <Route path="settings" element={<SuperSettings />} />
-                <Route path="*" element={<Navigate to="dashboard" replace />} />
-              </Routes>
-            </ProtectedRoute>} />
+      <SocketProvider>
+        <ErrorBoundary>
+          <IncomingCallPopup />
+          <BrowserRouter>
+            <Routes>
+              {/* PUBLIC ROUTES */}
+              <Route path="/" element={<HomePage />} />
+              <Route path="/login" element={<AuthRedirect><Login /></AuthRedirect>} />
+              
+              {/* SUPER ADMIN ROUTES */}
+              <Route path="/super/*" element={<ProtectedRoute roles={['superadmin']}>
+                <Routes>
+                  <Route path="dashboard" element={<SuperDashboard />} />
+                  <Route path="companies" element={<Companies />} />
+                  <Route path="companies/:id" element={<CompanyDetail />} />
+                  <Route path="leads" element={<SuperLeads />} />
+                  <Route path="employees" element={<SuperEmployees />} />
+                  <Route path="call-logs" element={<SuperCallLogs />} />
+                  <Route path="analytics" element={<SuperAnalytics />} />
+                  <Route path="activity" element={<ActivityFeed />} />
+                  <Route path="campaigns" element={<CampaignsOverview />} />
+                  <Route path="communications" element={<GlobalCommunications />} />
+                  <Route path="blacklist" element={<div className="p-20 text-center font-bold text-gray-400">Blacklist Monitor Stub</div>} />
+                  <Route path="audit" element={<AuditLog />} />
+                  <Route path="api-keys" element={<DeveloperAPI />} />
+                  <Route path="lottery" element={<LotteryManagement />} />
+                  <Route path="settings" element={<SuperSettings />} />
+                  <Route path="*" element={<Navigate to="dashboard" replace />} />
+                </Routes>
+              </ProtectedRoute>} />
 
-            {/* COMPANY ADMIN ROUTES ... */}
-            <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminDashboard /></ProtectedRoute>} />
-            <Route path="/admin/leads" element={<ProtectedRoute roles={['admin']}><LeadsPage /></ProtectedRoute>} />
-            <Route path="/admin/employees" element={<ProtectedRoute roles={['admin']}><EmployeesPage /></ProtectedRoute>} />
-            <Route path="/admin/call-logs" element={<ProtectedRoute roles={['admin']}><CallLogsPage /></ProtectedRoute>} />
-            <Route path="/admin/follow-ups" element={<ProtectedRoute roles={['admin']}><FollowUpsPage /></ProtectedRoute>} />
-            <Route path="/admin/campaigns" element={<ProtectedRoute roles={['admin']}><AdminCampaigns /></ProtectedRoute>} />
-            <Route path="/admin/outbound-leads" element={<ProtectedRoute roles={['admin']}><OutboundLeads /></ProtectedRoute>} />
-            <Route path="/admin/communications" element={<ProtectedRoute roles={['admin']}><AdminCommunications /></ProtectedRoute>} />
-            <Route path="/admin/blacklist" element={<ProtectedRoute roles={['admin']}><Blacklist /></ProtectedRoute>} />
-            <Route path="/admin/retry-queue" element={<ProtectedRoute roles={['admin']}><RetryQueue /></ProtectedRoute>} />
-            <Route path="/admin/analytics" element={<ProtectedRoute roles={['admin']}><AnalyticsPage /></ProtectedRoute>} />
-            <Route path="/admin/settings" element={<ProtectedRoute roles={['admin']}><SettingsPage /></ProtectedRoute>} />
-            
-            {/* New Admin Routes */}
-            <Route path="/admin/lottery" element={<ProtectedRoute roles={['admin']}><LotteryManagement /></ProtectedRoute>} />
-            <Route path="/admin/lottery/:id" element={<ProtectedRoute roles={['admin']}><CampaignDetail /></ProtectedRoute>} />
-            <Route path="/admin/developer" element={<ProtectedRoute roles={['admin']}><DeveloperAPI /></ProtectedRoute>} />
-            <Route path="/admin/audit" element={<ProtectedRoute roles={['admin']}><AuditLog /></ProtectedRoute>} />
+              {/* COMPANY ADMIN ROUTES ... */}
+              <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminDashboard /></ProtectedRoute>} />
+              <Route path="/admin/leads" element={<ProtectedRoute roles={['admin']}><LeadsPage /></ProtectedRoute>} />
+              <Route path="/admin/employees" element={<ProtectedRoute roles={['admin']}><EmployeesPage /></ProtectedRoute>} />
+              <Route path="/admin/call-logs" element={<ProtectedRoute roles={['admin']}><CallLogsPage /></ProtectedRoute>} />
+              <Route path="/admin/follow-ups" element={<ProtectedRoute roles={['admin']}><FollowUpsPage /></ProtectedRoute>} />
+              <Route path="/admin/campaigns" element={<ProtectedRoute roles={['admin']}><AdminCampaigns /></ProtectedRoute>} />
+              <Route path="/admin/outbound-leads" element={<ProtectedRoute roles={['admin']}><OutboundLeads /></ProtectedRoute>} />
+              <Route path="/admin/communications" element={<ProtectedRoute roles={['admin']}><AdminCommunications /></ProtectedRoute>} />
+              <Route path="/admin/blacklist" element={<ProtectedRoute roles={['admin']}><Blacklist /></ProtectedRoute>} />
+              <Route path="/admin/retry-queue" element={<ProtectedRoute roles={['admin']}><RetryQueue /></ProtectedRoute>} />
+              <Route path="/admin/analytics" element={<ProtectedRoute roles={['admin']}><AnalyticsPage /></ProtectedRoute>} />
+              <Route path="/admin/settings" element={<ProtectedRoute roles={['admin']}><SettingsPage /></ProtectedRoute>} />
+              
+              {/* New Admin Routes */}
+              <Route path="/admin/lottery" element={<ProtectedRoute roles={['admin']}><LotteryManagement /></ProtectedRoute>} />
+              <Route path="/admin/lottery/:id" element={<ProtectedRoute roles={['admin']}><CampaignDetail /></ProtectedRoute>} />
+              <Route path="/admin/developer" element={<ProtectedRoute roles={['admin']}><DeveloperAPI /></ProtectedRoute>} />
+              <Route path="/admin/audit" element={<ProtectedRoute roles={['admin']}><AuditLog /></ProtectedRoute>} />
 
-            {/* EMPLOYEE ROUTES */}
-            <Route path="/dashboard" element={<ProtectedRoute roles={['employee']}><EmployeeDashboard /></ProtectedRoute>} />
-            <Route path="/dashboard/leads" element={<ProtectedRoute roles={['employee']}><EmployeeLeads /></ProtectedRoute>} />
-            <Route path="/dashboard/leads/:id" element={<ProtectedRoute roles={['employee']}><LeadDetail /></ProtectedRoute>} />
-            <Route path="/dashboard/follow-ups" element={<ProtectedRoute roles={['employee']}><EmployeeFollowUps /></ProtectedRoute>} />
-            <Route path="/dashboard/outbound" element={<ProtectedRoute roles={['employee']}><OutboundWorkspace /></ProtectedRoute>} />
-            <Route path="/dashboard/performance" element={<ProtectedRoute roles={['employee']}><PerformancePage /></ProtectedRoute>} />
-            <Route path="/dashboard/calls" element={<ProtectedRoute roles={['employee']}><CallLogsPage /></ProtectedRoute>} />
-            <Route path="/dashboard/communications" element={<ProtectedRoute roles={['employee']}><div className="p-20 text-center font-bold text-gray-400">My Comms Stub</div></ProtectedRoute>} />
-            {/* FALLBACK */}
+              {/* EMPLOYEE ROUTES */}
+              <Route path="/dashboard" element={<ProtectedRoute roles={['employee']}><EmployeeDashboard /></ProtectedRoute>} />
+              <Route path="/dashboard/leads" element={<ProtectedRoute roles={['employee']}><EmployeeLeads /></ProtectedRoute>} />
+              <Route path="/dashboard/leads/:id" element={<ProtectedRoute roles={['employee']}><LeadDetail /></ProtectedRoute>} />
+              <Route path="/dashboard/follow-ups" element={<ProtectedRoute roles={['employee']}><EmployeeFollowUps /></ProtectedRoute>} />
+              <Route path="/dashboard/outbound" element={<ProtectedRoute roles={['employee']}><OutboundWorkspace /></ProtectedRoute>} />
+              <Route path="/dashboard/performance" element={<ProtectedRoute roles={['employee']}><PerformancePage /></ProtectedRoute>} />
+              <Route path="/dashboard/calls" element={<ProtectedRoute roles={['employee']}><CallLogsPage /></ProtectedRoute>} />
+              <Route path="/dashboard/communications" element={<ProtectedRoute roles={['employee']}><div className="p-20 text-center font-bold text-gray-400">My Comms Stub</div></ProtectedRoute>} />
+              {/* FALLBACK */}
 
 
-            {/* FALLBACK */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </BrowserRouter>
-      </ErrorBoundary>
+              {/* FALLBACK */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </BrowserRouter>
+        </ErrorBoundary>
+      </SocketProvider>
     </AuthProvider>
   );
 }
