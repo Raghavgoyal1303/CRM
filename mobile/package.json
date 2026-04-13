@@ -33,5 +33,14 @@
     "react-native-screens": "~4.0.0",
     "react-native-svg": "15.12.1"
   },
+  "overrides": {
+    "@react-native/babel-preset": "0.76.0"
+  },
+  "resolutions": {
+    "@react-native/babel-preset": "0.76.0"
+  },
+  "engines": {
+    "node": ">=20.18.3"
+  },
   "private": true
 }

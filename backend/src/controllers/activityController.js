@@ -32,7 +32,7 @@ exports.logActivity = async (req, res) => {
   const { action, details } = req.body;
   const id = randomUUID();
   try {
-    await db.query(
+    await query(
       'INSERT INTO activity_logs (id, company_id, user_id, action, details) VALUES (?, ?, ?, ?, ?)',
       [id, company_id, user_id, action, JSON.stringify(details || {})]
     );

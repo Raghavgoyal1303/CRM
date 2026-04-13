@@ -4,7 +4,7 @@ const { randomUUID } = require('crypto');
 exports.getOutboundLeads = async (req, res) => {
   const { company_id } = req.user;
   try {
-    const { rows } = await db.query(
+    const { rows } = await query(
       `SELECT ol.*, oc.name as campaign_name 
        FROM outbound_leads ol
        LEFT JOIN outbound_campaigns oc ON ol.campaign_id = oc.id
@@ -37,7 +37,7 @@ exports.convertToLead = async (req, res) => {
   const { id } = req.params;
   const { company_id } = req.user;
   try {
-    const { rows } = await db.query(
+    const { rows } = await query(
       'SELECT * FROM outbound_leads WHERE id = ? AND company_id = ?',
       [id, company_id]
     );

@@ -20,10 +20,10 @@ exports.addToBlacklist = async (req, res) => {
   const id = randomUUID();
   try {
     // Check for existing records
-    const { rows: exists } = await db.query('SELECT id FROM blacklist WHERE company_id = ? AND phone_number = ?', [company_id, phone_number]);
+    const { rows: exists } = await query('SELECT id FROM blacklist WHERE company_id = ? AND phone_number = ?', [company_id, phone_number]);
     if (exists.length > 0) return res.status(400).json({ message: 'Caller already excluded' });
 
-    await db.query(
+    await query(
       'INSERT INTO blacklist (id, company_id, phone_number, reason) VALUES (?, ?, ?, ?)',
       [id, company_id, phone_number, reason || 'Manual']
     );
