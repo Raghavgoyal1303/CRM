@@ -97,6 +97,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// Serve static files from the public/uploads directory
+app.use('/uploads', express.static(path.join(process.cwd(), 'public/uploads')));
+
+
 // Routes
 app.use('/api/super', require('./routes/superAdmin'));
 app.use('/api/auth', require('./routes/auth'));
@@ -112,6 +116,7 @@ app.use('/api/campaigns', require('./routes/campaigns'));
 app.use('/api/outbound-leads', require('./routes/outboundLeads'));
 app.use('/api/blacklist', require('./routes/blacklist'));
 app.use('/api/retry-queue', require('./routes/retryQueue'));
+app.use('/api/properties', require('./routes/properties'));
 app.use('/api/communications', require('./routes/communications'));
 app.use('/api/auto-response-settings', require('./routes/autoResponseSettings'));
 app.use('/api/telephony', require('./routes/telephony'));

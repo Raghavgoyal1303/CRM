@@ -53,6 +53,7 @@ import LotteryManagement from './pages/admin/LotteryManagement';
 import DeveloperAPI from './pages/admin/DeveloperAPI';
 import AuditLog from './pages/admin/AuditLog';
 import CampaignDetail from './pages/admin/CampaignDetail';
+import Properties from './pages/admin/Properties';
 
 const ProtectedRoute = ({ children, roles }) => {
   const { user, loading, isAuthenticated } = useAuth();
@@ -188,6 +189,7 @@ function App() {
               <Route path="/admin/blacklist" element={<ProtectedRoute roles={['admin']}><Blacklist /></ProtectedRoute>} />
               <Route path="/admin/retry-queue" element={<ProtectedRoute roles={['admin']}><RetryQueue /></ProtectedRoute>} />
               <Route path="/admin/analytics" element={<ProtectedRoute roles={['admin']}><AnalyticsPage /></ProtectedRoute>} />
+              <Route path="/admin/properties" element={<ProtectedRoute roles={['admin']}><Properties /></ProtectedRoute>} />
               <Route path="/admin/settings" element={<ProtectedRoute roles={['admin']}><SettingsPage /></ProtectedRoute>} />
               
               {/* New Admin Routes */}

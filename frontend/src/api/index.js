@@ -1,4 +1,4 @@
-﻿import axios from 'axios';
+import axios from 'axios';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
@@ -172,6 +172,18 @@ const telephonyService = {
   acefoneCall: (leadId) => api.post('/telephony/acefone/call', { leadId }),
 };
 export const telephonyApi = telephonyService;
+
+// 17. Properties & Inventory
+const propertySvc = {
+  getAll: () => api.get('/properties'),
+  create: (formData) => api.post('/properties', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  update: (id, data) => api.put(`/properties/${id}`, data),
+  delete: (id) => api.delete(`/properties/${id}`),
+};
+export const propertiesApi = propertySvc;
+export const propertyApi = propertySvc;
 
 export default api;
 

@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -8,7 +8,8 @@ import {
   CalendarCheck,
   Settings,
   LogOut,
-  Square
+  Square,
+  Building2
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -21,6 +22,7 @@ const Sidebar = () => {
     { name: 'Employees', path: '/employees', icon: Users, adminOnly: true },
     { name: 'Call Logs', path: '/call-logs', icon: History },
     { name: 'Follow-ups', path: '/follow-ups', icon: CalendarCheck },
+    { name: 'Inventory', path: '/properties', icon: Building2 },
     { name: 'Settings', path: '/settings', icon: Settings },
   ].filter(link => !link.adminOnly || user?.role === 'admin');
 
