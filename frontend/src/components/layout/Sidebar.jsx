@@ -22,7 +22,7 @@ const Sidebar = () => {
     { name: 'Employees', path: '/employees', icon: Users, adminOnly: true },
     { name: 'Call Logs', path: '/call-logs', icon: History },
     { name: 'Follow-ups', path: '/follow-ups', icon: CalendarCheck },
-    { name: 'Inventory', path: '/properties', icon: Building2 },
+    { name: 'Inventory', path: '/admin/properties', icon: Building2 },
     { name: 'Settings', path: '/settings', icon: Settings },
   ].filter(link => !link.adminOnly || user?.role === 'admin');
 
