@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
@@ -13,7 +13,8 @@ import {
   Bell,
   Settings,
   Radio,
-  Send
+  Send,
+  Building2
 } from 'lucide-react';
 import UserMenu from '../shared/UserMenu';
 
@@ -36,6 +37,7 @@ const EmployeeLayout = ({ children }) => {
     { path: '/dashboard/outbound', icon: Radio, label: 'Outbound' },
     { path: '/dashboard/calls', icon: Phone, label: 'Call Hist.' },
     { path: '/dashboard/communications', icon: Send, label: 'My Comms' },
+    { path: '/dashboard/properties', icon: Building2, label: 'Inventory' },
     { path: '/dashboard/performance', icon: BarChart2, label: 'My Perf.' },
   ];
 

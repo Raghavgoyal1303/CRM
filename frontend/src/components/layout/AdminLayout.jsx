@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import {
   Building2,
@@ -38,6 +38,7 @@ const AdminLayout = ({ children }) => {
     { title: 'Employees', icon: Users, path: '/admin/employees' },
     { title: 'Call Logs', icon: History, path: '/admin/call-logs' },
     { title: 'Follow-ups', icon: Clock, path: '/admin/follow-ups' },
+    { title: 'Inventory', icon: Building2, path: '/admin/properties' },
     { type: 'divider' },
     { title: 'Campaigns', icon: Radio, path: '/admin/campaigns' },
     { title: 'Outbound Leads', icon: UserCheck, path: '/admin/outbound-leads' },

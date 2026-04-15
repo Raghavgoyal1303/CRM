@@ -204,6 +204,7 @@ function App() {
               <Route path="/dashboard/leads/:id" element={<ProtectedRoute roles={['employee']}><LeadDetail /></ProtectedRoute>} />
               <Route path="/dashboard/follow-ups" element={<ProtectedRoute roles={['employee']}><EmployeeFollowUps /></ProtectedRoute>} />
               <Route path="/dashboard/outbound" element={<ProtectedRoute roles={['employee']}><OutboundWorkspace /></ProtectedRoute>} />
+              <Route path="/dashboard/properties" element={<ProtectedRoute roles={['employee']}><Properties /></ProtectedRoute>} />
               <Route path="/dashboard/performance" element={<ProtectedRoute roles={['employee']}><PerformancePage /></ProtectedRoute>} />
               <Route path="/dashboard/calls" element={<ProtectedRoute roles={['employee']}><CallLogsPage /></ProtectedRoute>} />
               <Route path="/dashboard/communications" element={<ProtectedRoute roles={['employee']}><div className="p-20 text-center font-bold text-gray-400">My Comms Stub</div></ProtectedRoute>} />
