@@ -97,8 +97,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Serve static files from the public/uploads directory
-app.use('/uploads', express.static(path.join(process.cwd(), 'public/uploads')));
+// Serve static files from the public/uploads directory with CORS enabled for PDF generation
+app.use('/uploads', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  next();
+}, express.static(path.join(process.cwd(), 'public/uploads')));
+
 
 
 // Routes

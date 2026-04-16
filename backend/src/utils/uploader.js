@@ -2,14 +2,23 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Ensure upload directory exists
+// Ensure upload directory exists - Robust path handling for Linux (Production)
 const uploadDir = path.join(process.cwd(), 'public/uploads/properties');
 if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+  try {
+    fs.mkdirSync(uploadDir, { recursive: true });
+    console.log('[Uploader] Created missing directory:', uploadDir);
+  } catch (err) {
+    console.error('[Uploader] Fatal: Could not create upload directory:', err.message);
+  }
 }
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    // Double check existence before each save
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
     cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
